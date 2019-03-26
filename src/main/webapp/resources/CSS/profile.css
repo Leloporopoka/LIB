@@ -1,0 +1,128 @@
+@font-face
+{
+    font-family: "PF Centro Slab";
+    src: url("/fonts/PF Centro Slab Pro Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+
+}
+html , body
+{
+
+    background-color: whitesmoke;
+    font-family: PF Centro Slab, serif;
+    font-size: 1.2vw;
+
+}
+html a, a:hover
+{
+    text-decoration: none;
+    color: black;
+}
+header a
+{
+    color: white;
+}
+
+.search
+{
+    width: 100%;
+    position: relative
+}
+.searchTerm
+{
+    float: left;
+    width: 100%;
+
+    padding: 5px;
+    height: 38px;
+
+    outline: none;
+    color: #9DBFAF;
+}
+
+.searchTerm:focus
+{
+    color: #00B4CC;
+}
+
+.searchButton
+{
+    right: 0px;
+    border: 0px;
+    position: absolute;
+    width: 40px;
+    height: 36px;
+    background: #ffffff;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.breadcrumb
+{
+    background-color: whitesmoke;
+    padding-left:0px;
+}
+.content
+{
+    background-color: whitesmoke;
+    margin-left: 4vw;
+    margin-right: 4vw;
+}
+.online-read
+{
+    background-color: white;
+}
+.recently-read
+{
+
+    height: 95vw;
+    width: 100%;
+    background-image: url(../pic/book_shelf.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.recently-read img
+{
+    height: 14.5vw;
+    border: 1px solid #aaaaaa61;
+}
+.nav-link.active
+{
+    color: #007bff !important;
+    background-color: white !important;
+}
+.nav-pills
+{
+    background-color: white;
+}
+.recent-book
+{
+    -webkit-box-reflect: below 1.3px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.9, transparent), to(white));
+
+}
+
+.card-content-reserve
+{
+    background-color: white;
+    border-radius: 20px;
+}
+.account-reserve-book img
+{
+    height: 14.5vw;
+    width: 9vw;
+}
+.soon
+{
+    color: #ffb100;
+}
+.expired
+{
+    color: #ff0000
+}
+.account-content .text-card
+{
+    width: 13vw;
+}

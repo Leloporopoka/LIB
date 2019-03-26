@@ -1,0 +1,30 @@
+
+.tags_system {
+    background-color: #f2f2f2;
+    margin-top: 100px;
+    padding: 40px 6em 40px 6em;
+}
+.tags_system button{
+    width: 100%;
+    text-align: left;
+    padding: .6em 1.25em;
+    font-size: 1.1em;
+}
+.tags_system .card{
+    margin-bottom: 4px;
+}
+.tags_system .card-header{
+    padding: 0 !important;
+}
+.tags_system h2{
+    text-align: center;
+}
+.tags_system .tag_link{
+    display: inline-block;
+    width: 49%;
+    font-size: 1.3em;
+    padding: .5em 0 0 1.5em;
+}
+.tags_system .card{
+ border: solid rgb(78, 76, 76) 1px  !important;
+}
