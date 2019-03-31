@@ -20,7 +20,7 @@
     }
 </style>
 <body>
-<jsp:include page="nav.jsp" />
+<jsp:include page="fragments/nav.jsp" />
 
 
 <div id="form" class="container border border-dark rounded">
@@ -118,6 +118,6 @@
 
 
 
-<jsp:include page="footer.jsp" />
+<jsp:include page="fragments/footer.html" />
 </body>
 </html>

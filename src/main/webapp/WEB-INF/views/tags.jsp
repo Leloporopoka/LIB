@@ -21,7 +21,7 @@
     </head>
 </head>
 <body>
-<jsp:include page="nav.jsp" />
+<jsp:include page="fragments/nav.jsp" />
 
 <div class="container">
     <div class="tags_system">

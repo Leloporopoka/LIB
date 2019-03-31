@@ -1,0 +1,85 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Librorum</title>
+    <link href="resources\CSS\bootstrap.min.css" rel="stylesheet"  type="text/css">
+    <link href="resources\CSS\style.css" rel="stylesheet"  type="text/css">
+    <link href="resources\CSS\footer.css" rel="stylesheet"  type="text/css">
+    <link rel="stylesheet" type="text/css" href="resources\CSS\slick.css">
+    <link rel="stylesheet" type="text/css" href="resources\CSS\slick-theme.css">
+    <script type="text/javascript" src="resources\JS\jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="resources\JS\bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="resources\JS\slick.js" type="text/javascript" charset="utf-8"></script>
+    <script src="resources\JS\script.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+           document.getElementById("vd").src =getSeason();
+        });
+        $(document).on('ready', function() {
+            $(".regular").slick({
+                dots: false,
+                infinite: true,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                arrows: true,
+
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+<div class="homepage-hero-module">
+    <div class="video-container">
+        <div class="filter"></div>
+        <video autoplay loop muted playsinline src="video" class="fillWidth" id="vd"></video>
+        <div class="poster hidden">
+            <img src="PATH_TO_JPEG" alt="">
+        </div>
+    </div>
+
+    <div class="container home-content">
+        <div class="search home">
+            <img  src="resources\pic\XvmmVWjgBYiZySykWBM8qtUU.jpg" alt="" class="mx-auto d-block">
+            <form action="search" class="search-container">
+                <input type="text" class="form-control" name="search">
+                <input hidden name="tag">
+                <button type="submit" class="button search-icon">
+                    <img  src="resources\pic\search.png" alt="">
+                </button>
+            </form>
+        </div>
+
+
+
+        <div class="most-popular">
+            <h1 class="popular">Most Popular</h1>
+            <section class="regular slider">
+                    <div th:each="book : ${books}">
+                        <a href="book/${book.id}">
+                            <img  src="data:image/jpeg;base64,${book.base64}" height="180px">
+                        </a>
+                    </div>
+            </section>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>

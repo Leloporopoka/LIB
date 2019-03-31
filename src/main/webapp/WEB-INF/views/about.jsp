@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<jsp:include page="nav.jsp" />
+<jsp:include page="fragments/nav.jsp" />
 <section class="content">
 
     <br>
@@ -58,6 +58,6 @@
     </div>
 </section>
 
-<jsp:include page="footer.jsp" />
+<jsp:include page="fragments/footer.html" />
 </body>
 </html>

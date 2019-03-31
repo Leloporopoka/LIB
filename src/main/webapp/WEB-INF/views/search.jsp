@@ -1,8 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,18 +7,17 @@
     <link href="resources\CSS\style.css" rel="stylesheet">
     <script type="text/javascript" src="resources\JS\jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="resources\JS\bootstrap.min.js"></script>
-    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--%>
     <script>
-        $(document).ready(function(){
-            $("#tag_close").click(function(){
-                $("#tag_input").val(null);
-                $(".delete").html("");
-            });
+    $(document).ready(function(){
+        $("#tag_close").click(function(){
+            $("#tag_input").val(null);
+            $(".delete").html("");
         });
-    </script>
+    });
+</script>
 </head>
 <body>
-<jsp:include page="nav.jsp" />
+<jsp:include page="fragments/nav.jsp" />
 <div class="container">
         <div class="search resultSearch">
 
