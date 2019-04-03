@@ -19,20 +19,20 @@
 
         <img height="330px" width="230px"  src="data:image/jpeg;base64,${book.base64}" alt=""  class="align-self-start mr-3">
             <div class="media-body">
-            <h2>${book.name}</h2>
+            <h2 th:text="${book.name}"></h2>
 
-        <h6>By ${book.author}</h6>
+        <h6 th:text="'By '+${book.author}"></h6>
 
-        <p>${book.edition} edition</p>
-        <p>${book.description}</p>
+        <p th:text="${book.edition} +' edition'"></p>
+        <p th:text="${book.description}"></p>
             </div>
         </div>
         <br>
 
-        <form action ="/bookRate" method="POST">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            <input type="hidden" name="user_id" value="${user.id}" />
-            <input type="hidden" name="book_id" value="${book.id}" />
+        <form th:action="@{/bookRate}" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name="user_id" th:value="${user.id}" />
+            <input type="hidden" name="book_id" th:value="${book.id}" />
             <button type="submit" name="rating" value="1">
 
             </button>
@@ -50,7 +50,7 @@
             </button>
         </form>
 
-        <h4>Rating ${rating}</h4>
+        <h4 th:text="'Rating '+ ${rating}"></h4>
 
 
 
@@ -58,24 +58,20 @@
          <div class="tags">
 
              <h5>Tags:</h5>
-             <c:forEach items="${book.tags}" var="tag">
-                 <div class="tag"><a href="/searchByTag?child=${tag.name}">${tag.name}</a></div>
-             </c:forEach>
+                 <div class="tag" th:each="tag : ${book.tags}"><a th:href="@{/searchByTag(child=${tag.name})}" th:text="${tag.name}"></a></div>
              <br>
 
 
-             <c:choose>
-                 <c:when test="${book.amount==0}">
-             <button type="button" class="btn-dark disabled"  id="reserv" disabled>Reserve</button>
+                     <div th:if="${book.amount==0}">
+             <button  type="button" class="btn-dark disabled"  id="reserv" disabled>Reserve</button>
                      <div class="alert alert-danger" role="alert">
                          This book is not available for reservation as it is not in the library at the moment.
+                        </div>
                      </div>
 
-                 </c:when>
-                 <c:otherwise>
-                     <button type="button" class="btn-dark reserv"  id="reserv"  data-toggle="modal" data-target="#ReserveBook" >Reserve</button>
-                 </c:otherwise>
-             </c:choose>
+                     <button th:unless="${book.amount==0}" type="button" class="btn-dark reserv"  id="reserv"  data-toggle="modal" data-target="#ReserveBook" >Reserve</button>
+
+
          </div>
     </div>
 </div>
@@ -92,23 +88,15 @@
                 <form action="/reserve" method="post" >
 
                 <div class="modal-body">
-
-
-
-                    <c:choose>
-                        <c:when test="${user==null}">
-                            <div class="form-group">
+                            <div class="form-group" th:if="${user==null}">
                                 <label for="recipient-name" class="col-form-label">Student Id:</label>
                                 <input type="text" class="form-control"    id="recipient-name" name="student_id"/>
                             </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="form-group">
+
+                            <div class="form-group" th:unless="${user==null}">
                                 <label for="recipient-nam" class="col-form-label">Student Id:</label>
                                 <input type="text" class="form-control"    id="recipient-nam" name="student_id" value="${user.login}"/>
                             </div>
-                        </c:otherwise>
-                    </c:choose>
 
                             <div class="form-group">
                                 <label for="text" class="col-form-label">Password:</label>
@@ -131,6 +119,6 @@
     </div>
 </div>
 
-
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
