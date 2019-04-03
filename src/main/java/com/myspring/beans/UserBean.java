@@ -358,5 +358,31 @@ public class UserBean {
         }
     }
 
+    public void addRating(Rating rate){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(rate);
+        transaction.commit();
+        session.close();
+    }
+
+    public double countRating(Long id){
+        double sum=0;
+        int amount=0;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Rating> criteriaQuery = builder.createQuery(Rating.class);
+        Root root = criteriaQuery.from(Rating.class);
+        Predicate predicate = builder.equal(root.get("id"), id);
+        List<Rating> rating= session.createQuery(criteriaQuery.where(predicate)).list();
+        for(int i=0;i<rating.size();i++){
+           sum+=rating.get(i).getRate();
+           amount++;
+        }
+        session.close();
+        return sum/amount;
+    }
+
+
 
 }
