@@ -174,8 +174,10 @@ public class MainController {
         ModelAndView mv = new ModelAndView("Book");
         Users user = getUserData();
         Book book = userBean.getBookById(book_id);
+        Double rating= userBean.countRating(book_id);
         mv.addObject("user" , user);
         mv.addObject("book" , book);
+        mv.addObject("rating",rating);
         return mv;
     }
 
@@ -318,6 +320,11 @@ public class MainController {
     }
 
 
+    @RequestMapping (value="/bookRate",method = RequestMethod.POST)
+    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rate") int rating){
+        userBean.addRating(new Rating(user_id,book_id,rating));
+        return "redirect:book/"+book_id;
+    }
 
 
 
