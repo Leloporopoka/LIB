@@ -63,7 +63,7 @@
             <section class="regular slider">
                     <div th:each="book : ${books}">
                         <a href="book/${book.id}">
-                            <img  src="data:image/jpeg;base64,${book.base64}" height="180px">
+                            <img  th:src="@{${'data:image/jpeg;base64,'+book.base64}}" height="180px">
                         </a>
                     </div>
             </section>
