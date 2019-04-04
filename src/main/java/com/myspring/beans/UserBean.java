@@ -373,14 +373,16 @@ public class UserBean {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Rating> criteriaQuery = builder.createQuery(Rating.class);
         Root root = criteriaQuery.from(Rating.class);
-        Predicate predicate = builder.equal(root.get("id"), id);
+        Predicate predicate = builder.equal(root.get("book_id"), id);
         List<Rating> rating= session.createQuery(criteriaQuery.where(predicate)).list();
         for(int i=0;i<rating.size();i++){
            sum+=rating.get(i).getRate();
            amount++;
         }
         session.close();
-        return sum/amount;
+        sum=sum/amount;
+        sum =  Math.round(sum * 100.0) / 100.0;
+        return sum;
     }
 
 

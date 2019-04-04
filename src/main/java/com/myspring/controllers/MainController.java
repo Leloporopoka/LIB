@@ -321,7 +321,7 @@ public class MainController {
 
 
     @RequestMapping (value="/bookRate",method = RequestMethod.POST)
-    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rate") int rating){
+    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rating") int rating){
         userBean.addRating(new Rating(user_id,book_id,rating));
         return "redirect:book/"+book_id;
     }
