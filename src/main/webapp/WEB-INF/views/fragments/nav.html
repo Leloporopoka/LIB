@@ -60,7 +60,7 @@
                                 <label for="message-text" class="col-form-label">Password:</label>
                                 <input type="password" class="form-control" id="message-text" name="password_parameter">
                             </div>
-                            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -46,6 +46,33 @@ public class UserBean {
         transaction.commit();
         session.close();
     }
+    public void addRec(Recommend recommend) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(recommend);
+        transaction.commit();
+        session.close();
+    }
+
+    public List<Recommend> countRecg(Long id){
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Recommend> criteriaQuery = builder.createQuery(Recommend.class);
+        Root root = criteriaQuery.from(Recommend.class);
+        Predicate predicate = builder.equal(root.get("id"), id);
+        List<Recommend> recom= session.createQuery(criteriaQuery.where(predicate)).list();
+
+        if (recom.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return recom;
+        }
+
+    }
+
     public void reserveBook( Reserve_Books reserve_books) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -373,14 +400,16 @@ public class UserBean {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Rating> criteriaQuery = builder.createQuery(Rating.class);
         Root root = criteriaQuery.from(Rating.class);
-        Predicate predicate = builder.equal(root.get("id"), id);
+        Predicate predicate = builder.equal(root.get("book_id"), id);
         List<Rating> rating= session.createQuery(criteriaQuery.where(predicate)).list();
         for(int i=0;i<rating.size();i++){
            sum+=rating.get(i).getRate();
            amount++;
         }
         session.close();
-        return sum/amount;
+        sum=sum/amount;
+        sum =  Math.round(sum * 100.0) / 100.0;
+        return sum;
     }
 
 

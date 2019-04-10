@@ -168,7 +168,11 @@
                     </tbody>
                 </table>
             </div>
-                <!-- End of operations with books-->
+                <!-- End of operations <form action="/addRec" method="POST">
+                                    <input type="hidden" name="book_id" value="${book.id}">
+                                    <input type="hidden" name="user_id" value="${user.id}" />
+                                    <button class="btn btn-dark">Submit</button>
+                                </form>with books-->
 
                 <div class="tab-pane  fade" id="tabBody2" role="tabpanel" aria-labelledby="tab2" aria-hidden="true" tabindex="0">
                 <div class="row">

@@ -145,6 +145,13 @@ public class MainController {
         userBean.deleteBook(id);
         return "redirect:admin";
     }
+
+    @RequestMapping(value="/addRec", method = RequestMethod.POST)
+    public String addRec(@RequestParam(name = "user_id") Long user_id, @RequestParam(name = "book_id") Long book_id){
+        userBean.addRec(new Recommend (user_id, book_id));
+        return "redirect:profile";
+    }
+
     @RequestMapping(value="/editBook/{id}", method = RequestMethod.GET)
     public ModelAndView EditBook(@PathVariable(name = "id") Long id,HttpSession session){
         ModelAndView mv =new ModelAndView("EditBook");
@@ -321,7 +328,7 @@ public class MainController {
 
 
     @RequestMapping (value="/bookRate",method = RequestMethod.POST)
-    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rate") int rating){
+    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rating") int rating){
         userBean.addRating(new Rating(user_id,book_id,rating));
         return "redirect:book/"+book_id;
     }
