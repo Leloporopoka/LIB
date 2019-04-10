@@ -1,0 +1,22 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+    <link href="..\resources\CSS\bootstrap.min.css" rel="stylesheet">
+    <link href="..\resources\CSS\style.css" rel="stylesheet">
+    <link href="..\resources\CSS\footer.css" rel="stylesheet"  type="text/css">
+    <script type="text/javascript" src="..\resources\JS\jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="..\resources\JS\bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container text-center">
+    <embed th:src="@{${book.file_name}}" width="800px" height="1500px" />
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

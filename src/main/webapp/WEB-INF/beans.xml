@@ -19,12 +19,12 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/labs?useUnicode=true&amp;serverTimezone=UTC&amp;characterE ncoding=utf-8"/>
         <property name="username" value="root"/>
-        <property name="password" value=""/>
+        <property name="password" value="12345"/>
     </bean>
 
 
     <bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSizePerFile" value="5242880"/>
+        <property name="maxUploadSizePerFile" value="100000000"/>
     </bean>
 
 

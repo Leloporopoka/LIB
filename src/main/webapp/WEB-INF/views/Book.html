@@ -24,6 +24,7 @@
                 <h6 th:text="'By '+${book.author}"></h6>
                 <p th:text="${book.edition} +' edition'"></p>
                 <p th:text="${book.description}"></p>
+                <a th:unless="${book.eversion==0}" th:href="@{${'/oread/'+book.id}}">Read Online</a>
             </div>
         </div>
 
