@@ -1,13 +1,19 @@
 package com.myspring.controllers;
+
+import com.google.gson.Gson;
 import com.myspring.beans.UserBean;
 import com.myspring.db.entities.*;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +80,12 @@ public class MainController {
         return "redirect:admin";
     }
 
+    @RequestMapping(value = "/getSearchBook" ,method=RequestMethod.GET)
+    public String getSearchBook() {
+        List <Book> books = userBean.getAllBooks();
+        System.out.println();
+        return books.toString();
+    }
 
     @RequestMapping(value = "search")
     public ModelAndView Search(@RequestParam(name = "search") String search ,

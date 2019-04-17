@@ -27,8 +27,25 @@
 
 <script>
     export default {
-      name: "search-component"
+      name: "search-component",
+        data() {
+            return {
+                answer: null,
+                search:null
+            }
+        },
+        mounted() {
+            this.loadData('http://' + location.host + '/getSearchBook');
+        },
+        methods:{
+            loadData(url) {
+                this.$axios.get(url).then(response => {
+                    this.answer = response.data;
+                });
+            }
+        }
     }
+
 </script>
 
 <style scoped>
