@@ -412,6 +412,29 @@ public class UserBean {
         return sum;
     }
 
+    public void addOnlineVersion(ORead or) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(or);
+        transaction.commit();
+        session.close();
+    }
+
+    public ORead getOnlineReadBook(Long id){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ORead> criteriaQuery = builder.createQuery(ORead.class);
+        Root root = criteriaQuery.from(ORead.class);
+        Predicate predicate = builder.equal(root.get("book_id"), id);
+        List<ORead> or = session.createQuery(criteriaQuery.where(predicate)).list();
+        if (or.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return or.get(0);
+        }
+    }
 
 
 }

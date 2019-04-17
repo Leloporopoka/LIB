@@ -28,8 +28,12 @@ public class Book {
 
     @Column(name = "author")
     private String author;
+
     @Column(name ="edition")
     private int edition;
+
+    @Column(name="eversion")
+    private int eversion;
 
     @Lob
     @Column( nullable = false, columnDefinition = "mediumblob")
@@ -69,7 +73,15 @@ public class Book {
 
     }
 
-    public Book(String name, String description, byte[] image, int amount, String author, int edition, String base64, Set<Tag> tags) {
+    public int getEversion() {
+        return eversion;
+    }
+
+    public void setEversion(int eversion) {
+        this.eversion = eversion;
+    }
+
+    public Book(String name, String description, byte[] image, int amount, String author, int edition, String base64, Set<Tag> tags,int eversion) {
         this.name = name;
         this.description = description;
         this.image = image;
@@ -78,6 +90,7 @@ public class Book {
         this.edition = edition;
         this.base64 = base64;
         this.tags = tags;
+        this.eversion=eversion;
     }
 
     public Long getId() {
