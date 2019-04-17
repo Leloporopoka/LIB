@@ -135,14 +135,15 @@ public class MainController {
 
         name = file.getOriginalFilename();
 
-        String rootPath = "..\\resources\\pic";
-        File dir = new File(rootPath + File.separator + "loadFiles");
+        String rootPath = "C:\\Users\\MI\\IdeaProjects\\LIB\\src\\main\\webapp\\resources\\pic\\loadFiles";
+        File dir = new File(rootPath);
 
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        String path=dir.getAbsolutePath() + File.separator + name;
+        String path=rootPath + File.separator + name;
+        String basePath= "..\\resources\\pic\\loadFiles"+ File.separator + name;
 
         File uploadedFile = new File(path);
         BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
@@ -150,7 +151,7 @@ public class MainController {
           stream.flush();
           stream.close();
 
-          userBean.addOnlineVersion(new ORead(id,path));
+          userBean.addOnlineVersion(new ORead(id,basePath));
 
 
          Book book=userBean.getBookById(id);
