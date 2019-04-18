@@ -5,8 +5,10 @@
     <title>Title</title>
     <link href="resources\CSS\bootstrap.min.css" rel="stylesheet">
     <link href="resources\CSS\style.css" rel="stylesheet">
+    <link href="resources\CSS\footer.css" rel="stylesheet"  type="text/css">
     <script type="text/javascript" src="resources\JS\jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="resources\JS\bootstrap.min.js"></script>
+
     <script>
     $(document).ready(function(){
         $("#tag_close").click(function(){
@@ -19,6 +21,12 @@
 <body>
 <div th:replace="fragments/nav :: nav"></div>
 <div class="container">
+    <div id="app">
+
+
+    <search-component></search-component>
+
+    </div>
 
         <!--<div class="search resultSearch">-->
 
@@ -80,5 +88,8 @@
 </div>
 </div>
 </body>
+<script type="text/javascript"  src=resources\static\js\main.js></script>
+<script type="text/javascript"  src=resources\static\js\vendor.js></script>
+<script type="text/javascript"  src=resources\static\js\manifest.js></script>
 </html>
 

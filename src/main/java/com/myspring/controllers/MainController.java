@@ -1,17 +1,20 @@
 package com.myspring.controllers;
+
+import com.google.gson.Gson;
 import com.myspring.beans.UserBean;
 import com.myspring.db.entities.*;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,11 +24,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 @Controller
@@ -72,13 +71,6 @@ public class MainController {
 
         return mv;
     }
-    @RequestMapping(value = {"user"})
-    public ModelAndView StudentPage(HttpSession session) {
-        ModelAndView mv = new ModelAndView("User");
-        Users us = (Users) session.getAttribute("user");
-        mv.addObject("user", us);
-        return mv;
-    }
 
 
     @RequestMapping(value="/deleteUser",method=RequestMethod.GET)
@@ -88,6 +80,12 @@ public class MainController {
         return "redirect:admin";
     }
 
+    @RequestMapping(value = "/getSearchBook" ,method=RequestMethod.GET)
+    public String getSearchBook() {
+        List <Book> books = userBean.getAllBooks();
+        System.out.println();
+        return books.toString();
+    }
 
     @RequestMapping(value = "search")
     public ModelAndView Search(@RequestParam(name = "search") String search ,
@@ -130,13 +128,47 @@ public class MainController {
     @RequestMapping(value = {"/addBook"}, headers = ("content-type=multipart/*"), method = RequestMethod.POST)
     public String AddBook(@RequestParam(name = "name") String name,@RequestParam(name = "description") String description,
                           @RequestParam(name = "author") String author,@RequestParam(name = "edition") int edition,@RequestParam(name = "amount") int amount,
-                          @RequestParam(name = "fileUpload") MultipartFile fileUpload, ModelMap map) throws IOException {
+                          @RequestParam(name = "fileUpload") MultipartFile fileUpload, ModelMap map
+                          ) throws IOException {
 
         byte[] bytes = fileUpload.getBytes();
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        Book book = new Book(name,description,bytes, amount, author, edition, null, null);
+        Book book = new Book(name,description,bytes, amount, author, edition, null, null,0);
         book.setBase64(Base64.encode(bytes));
         userBean.addBook(book);
+
+        return "redirect:admin";
+    }
+
+    @RequestMapping(value="/upload", method = RequestMethod.POST)
+    public String uploadPDF(@RequestParam("pdf") MultipartFile file,@RequestParam("id") Long id )throws IOException {
+       String name=null;
+        byte[] bytes = file.getBytes();
+
+        name = file.getOriginalFilename();
+
+        String rootPath = "C:\\Users\\MI\\IdeaProjects\\LIB\\src\\main\\webapp\\resources\\pic\\loadFiles";
+        File dir = new File(rootPath);
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String path=rootPath + File.separator + name;
+        String basePath= "..\\resources\\pic\\loadFiles"+ File.separator + name;
+
+        File uploadedFile = new File(path);
+        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
+          stream.write(bytes);
+          stream.flush();
+          stream.close();
+
+          userBean.addOnlineVersion(new ORead(id,basePath));
+
+
+         Book book=userBean.getBookById(id);
+         book.setEversion(1);
+         userBean.editBook(book);
         return "redirect:admin";
     }
 
@@ -162,11 +194,11 @@ public class MainController {
     @RequestMapping(value="/changeBook", method = RequestMethod.POST)
     public String ChangeBook(@RequestParam(name = "id") Long id,@RequestParam(name = "name") String name,@RequestParam(name = "description") String description,
                              @RequestParam(name = "author") String author,@RequestParam(name = "edition") int edition,@RequestParam(name = "amount") int amount,
-                             @RequestParam(name = "fileUpload") MultipartFile fileUpload, ModelMap map) throws IOException {
+                             @RequestParam(name = "fileUpload") MultipartFile fileUpload,@RequestParam(name = "ev") int ev, ModelMap map) throws IOException {
 
         byte[] bytes = fileUpload.getBytes();
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        Book book = new Book(name, description, bytes, amount, author, edition, null, null);
+        Book book = new Book(name, description, bytes, amount, author, edition, null, null,ev);
         book.setId(id);
         book.setBase64(Base64.encode(bytes));
         userBean.editBook(book);
@@ -331,6 +363,13 @@ public class MainController {
     public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rating") int rating){
         userBean.addRating(new Rating(user_id,book_id,rating));
         return "redirect:book/"+book_id;
+    }
+
+    @RequestMapping(value="/oread/{id}", method = RequestMethod.GET)
+    public ModelAndView onlineRead(@PathVariable(name = "id") Long id){
+        ModelAndView mv =new ModelAndView("ORead");
+        mv.addObject("book",userBean.getOnlineReadBook(id));
+        return mv;
     }
 
 
