@@ -87,8 +87,8 @@ public class MainController {
         return books.toString();
     }
 
-    @RequestMapping(value = "search")
-    public ModelAndView Search(@RequestParam(name = "search") String search ,
+    @RequestMapping(value = "/search")
+    public ModelAndView Search(@RequestParam(name = "searchMessage") String search ,
                                @RequestParam(name ="tag") String tag
     ){
         List <Book> books;

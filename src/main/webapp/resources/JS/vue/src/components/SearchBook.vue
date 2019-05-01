@@ -44,9 +44,12 @@
 
         computed: {
             filteredList() {
+                if(this.search == undefined)
+                    this.search = "";
                 return this.answer.filter(post => {
                     return post.name.toLowerCase().includes(this.search.toLowerCase())
                 })
+
                     // .push(this.answer.filter(post => {
                     //     return post.author.toLowerCase().includes(this.search.toLowerCase())
                     // }))

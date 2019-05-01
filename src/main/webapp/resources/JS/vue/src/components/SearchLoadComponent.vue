@@ -2,7 +2,7 @@
     <div>
     <div class="search resultSearch">
         <form action="search" class="search-container">
-            <input type="text" class="form-control" name="search" v-model="search">
+            <input type="text" class="form-control" name="searchMessage" v-model="search" v-text="search">
             <!--<input hidden name="tag" value="" id="tag_input">-->
             <button type="submit" class="button search-icon">
                 <img src="resources\pic\search.png" alt="">
@@ -22,16 +22,20 @@
 <script>
     export default {
         name: "SearchLoadComponent",
+
         data() {
             return {
                 displaykey: 0,
                 answer: null,
-                search: "",
+                search : "",
+                tag: null
             }
         },
-        mounted() {
+        created() {
             this.loadData('/api/getAllBooks');
+            // this.getSearchMessage();
         },
+
         methods: {
             loadData(url) {
                 return this.$axios.get(url).then(response => {
@@ -39,7 +43,14 @@
                     this.displaykey++;
                 });
 
-            }
+            },
+            // getSearchMessage(){
+            //     var url = new URL(window.location.href);
+            //     this.search = url.searchParams.get("seachMessage");
+            //     this.tag = url.searchParams.get("tag");
+            //
+            // },
+
         }
     }
 </script>
