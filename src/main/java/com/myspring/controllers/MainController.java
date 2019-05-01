@@ -1,9 +1,9 @@
 package com.myspring.controllers;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import com.myspring.beans.UserBean;
 import com.myspring.db.entities.*;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +58,7 @@ public class MainController {
         List<Book>books = userBean.getAllBooks();
         List<Reserve_Books>rbooks = userBean.getAllReservedBooks();
         List<Debt_Books>dbooks = userBean.getAllDebtBooks();
-        List<Users>users=userBean.getAllUsers(2L);
+        List<Users>users=userBean.getAllUsers(1L);
 
 
 
@@ -194,11 +194,11 @@ public class MainController {
     @RequestMapping(value="/changeBook", method = RequestMethod.POST)
     public String ChangeBook(@RequestParam(name = "id") Long id,@RequestParam(name = "name") String name,@RequestParam(name = "description") String description,
                              @RequestParam(name = "author") String author,@RequestParam(name = "edition") int edition,@RequestParam(name = "amount") int amount,
-                             @RequestParam(name = "fileUpload") MultipartFile fileUpload,@RequestParam(name = "ev") int ev, ModelMap map) throws IOException {
+                             @RequestParam(name = "fileUpload") MultipartFile fileUpload, ModelMap map) throws IOException {
 
         byte[] bytes = fileUpload.getBytes();
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        Book book = new Book(name, description, bytes, amount, author, edition, null, null,ev);
+        Book book = new Book(name, description, bytes, amount, author, edition, null, null,0);
         book.setId(id);
         book.setBase64(Base64.encode(bytes));
         userBean.editBook(book);
@@ -258,7 +258,7 @@ public class MainController {
                              @RequestParam(name = "name") String name){
         Set<Roles>roles = new HashSet<Roles>();
         Roles role = new Roles("ROLE_ADMIN");
-        role.setId(2L);
+        role.setId(1L);
         roles.add(role);
         Users us = new Users(login,name,password,roles);
         us.setId(id);
@@ -311,11 +311,12 @@ public class MainController {
         ModelAndView mv = new ModelAndView("profile");
         Users user = getUserData();
         List<Reserve_Books> reserve_books = userBean.getReserveBookByUser(user);
-
+        List <Remind> rm =userBean.checkNotifications(user);
         List<Debt_Books> debt_Books = userBean.getDebtBookByUser(user);
         mv.addObject("reserve" , reserve_books);
         mv.addObject("user" , user);
         mv.addObject("debt" ,debt_Books );
+        mv.addObject("notifications",rm);
         return mv;
     }
 
@@ -370,6 +371,13 @@ public class MainController {
         ModelAndView mv =new ModelAndView("ORead");
         mv.addObject("book",userBean.getOnlineReadBook(id));
         return mv;
+    }
+
+    @RequestMapping (value="/remind",method = RequestMethod.POST)
+    public String RemindMe(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id){
+        Users us = getUserData();
+        userBean.RemindMe(new Remind(us,userBean.getBookById(book_id)));
+        return "redirect:book/"+book_id;
     }
 
 

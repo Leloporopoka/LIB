@@ -1,0 +1,35 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Book</title>
+    <link href="..\resources\CSS\bootstrap.css" rel="stylesheet">
+    <link href="..\resources\CSS\form.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container jumbotron" id="cont">
+    <div class="col-md-12 " id="form" >
+        <div class="form_main">
+            <h2>Add Changes that you Need</h2>
+            <div class="form">
+                <form th:action="@{/changeBook}" method="POST" id="contactFrm" enctype="multipart/form-data">
+                    <input type="hidden" name="id" th:value="${book.id}">
+                    <input class="txt"  type="text"  name="name"  th:value="${book.name}"/>
+                    <input  class="txt" type="text" name="description" path="description" th:value="${book.description}"/>
+                    <input type="text"   th:value="${book.author}"  name="author" class="txt"/>
+                    <input  type="text"   th:value="${book.edition}"  name="edition" class="txt"/>
+                    <input type="text"   th:value="${book.amount}"   name="amount" class="txt"/>
+                    <input type="file" name="fileUpload" size="50" /></td>                
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                    <input type="submit" value="Accept" name="submit" class="txt2">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

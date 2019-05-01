@@ -1,0 +1,29 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Change User</title>
+    <link href="..\resources\CSS\bootstrap.css" rel="stylesheet">
+    <link href="..\resources\CSS\form.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container jumbotron" id="cont">
+    <div class="col-md-12 " id="form" >
+            <div class="form_main">
+                <h4 class="heading">Add Changes</h4>
+                <div class="form">
+                    <form th:action="@{/changeUser}" method="POST" id="contactFrm" name="contactFrm">
+                        <input type="hidden" th:value="${user.id}" name="id">
+                        <input type="text" th:value="${user.login}" name="login" class="txt">
+                        <input type="text" th:value="${user.password}" name="password" class="txt">
+                        <input type="text"  th:value="${user.name}" name="name" class="txt">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="submit" th:value="Accept" name="submit" class="txt2">
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+</body>
+</html>
