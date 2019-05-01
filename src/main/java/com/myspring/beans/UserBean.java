@@ -436,5 +436,30 @@ public class UserBean {
         }
     }
 
+    public void RemindMe(Remind rm) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(rm);
+        transaction.commit();
+        session.close();
+    }
+
+    public List<Remind> checkNotifications(Users user){
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Remind> query = criteriaBuilder.createQuery(Remind.class);
+        Root<Remind> root = query.from(Remind.class);
+        List<Remind> rm = session.createQuery(query.where(criteriaBuilder.equal(root.get("user"), user))).list();
+
+        if (rm.isEmpty()) {
+             session.close();
+             return null;
+        } else {
+            session.close();
+            return rm;
+        }
+    }
+
 
 }

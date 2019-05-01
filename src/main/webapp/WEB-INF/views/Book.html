@@ -140,6 +140,12 @@
              <button  type="button" class="btn-dark disabled"  id="reserv" disabled>Reserve</button>
                      <div class="alert alert-danger" role="alert">
                          This book is not available for reservation as it is not in the library at the moment.
+                         <form th:action = "@{/remind}" method="POST">
+                             <input type="hidden" name="user_id" th:value="${user.id}">
+                             <input type="hidden" name ="book_id" th:value="${book.id}">
+                             <button class="btn btn-primary">Remind Me</button>
+                         </form>
+
                         </div>
                      </div>
 

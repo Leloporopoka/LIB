@@ -152,7 +152,7 @@
 
                             <td>  <img  th:src="@{${'data:image/jpeg;base64,'+book.base64}}"></td>
                             <td>
-                                <a class="btn btn-dark" href="/editBook/${book.id}">Edit</a>
+                                <a class="btn btn-dark" th:href="@{${'editBook/'+book.id}}">Edit</a>
                             </td>
                             <td>
                                 <form th:action="@{/deleteBook}" method="GET">
@@ -270,18 +270,18 @@
                                 </tr>
                                 </thead>
 
-                                <tbody th:each="users : ${users}">
+                                <tbody th:each="user : ${users}">
 
                                     <tr>
-                                        <td th:text="${users.login}"></td>
-                                        <td th:text="${users.password}"></td>
-                                        <td th:text="${users.name}"></td>
+                                        <td th:text="${user.login}"></td>
+                                        <td th:text="${user.password}"></td>
+                                        <td th:text="${user.name}"></td>
                                         <td>
-                                            <a th:href="@{${'/editUser/'+users.id}}">Edit</a>
+                                            <a th:href="@{${'/editUser/'+user.id}}">Edit</a>
                                         </td>
                                         <td>
                                             <form method="get" th:action="@{/deleteUser}">
-                                                <input type="hidden" name="id" th:value="${users.id}">
+                                                <input type="hidden" name="id" th:value="${user.id}">
                                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <button class="btn btn-dark" >Delete</button>
                                             </form>
