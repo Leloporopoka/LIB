@@ -16,7 +16,7 @@
         <intercept-url pattern="/home" access="permitAll()"/>
         <intercept-url pattern="/about" access="permitAll()"/>
         <intercept-url pattern="/api" access="permitAll()"/>
-
+        <intercept-url pattern="/profile" access="permitAll()"/>
         <intercept-url pattern="/editUser" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/accept" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/deleteUser" access="hasRole('ROLE_ADMIN')"/>

@@ -136,7 +136,7 @@
              <br>
 
 
-                     <div th:if="${book.amount==0}">
+                     <div th:if="${book.amount==0 && user!= null}">
              <button  type="button" class="btn-dark disabled"  id="reserv" disabled>Reserve</button>
                      <div class="alert alert-danger" role="alert">
                          This book is not available for reservation as it is not in the library at the moment.
