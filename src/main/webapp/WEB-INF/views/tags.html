@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Book</title>
+        <link href="resources\CSS\bootstrap.min.css" rel="stylesheet">
+        <link href="resources\CSS\style.css" rel="stylesheet">
+        <link href="resources\CSS\tag.css" rel="stylesheet">
+        <script type="text/javascript" src="resources\JS\jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="resources\JS\bootstrap.min.js"></script>
+
+    </head>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div class="tags_system">
+        <h2 class="align-content-center"> Tags: </h2>
+
+        <div class="accordion" id="accordionExample">
+            <!--<th:if test="${!(parent==null)}">-->
+            <div th:each="parentTags : ${parent}">
+
+
+                <div class="card">
+                    <div class="card-header bg-dark" id=th:value="heading${parentTag.id}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-dark" type="button" data-toggle="collapse"
+                                    data-target="#collapse${parentTag.id}" aria-expanded="false"
+                                    aria-controls="collapse${parentTag.id}"
+                                     th:text="${parentTags.name}">
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapse${parentTag.id}" class="collapse" aria-labelledby="heading${parentTag.id}"
+                         data-parent="#accordionExample">
+
+                            <div class="card-body" th:if="${child!=null}">
+                                <th:block th:each="childTag : ${child}">
+                                        <div class="tag_link" th:if="${childTag.parents_id == parentTags.id}">
+                                            <a th:href="@{${'/searchByTag?child=' + childTag.name}}"
+                                               th:text="${childTag.name}"></a>
+                                        </div>
+
+
+                                    <!--</th:if>-->
+                                </th:block>
+                            </div>
+
+                    </div>
+
+                </div>
+                </th:if>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -102,7 +102,7 @@ public class MainController {
         else{
             books =userBean.getBook(search);
         }
-
+        System.out.println(books);
         Users user = getUserData();
         ModelAndView mv = new ModelAndView("search");
         mv.addObject("tag" , tag);
