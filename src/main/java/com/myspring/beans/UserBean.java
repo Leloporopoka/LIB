@@ -461,5 +461,53 @@ public class UserBean {
         }
     }
 
+    public void addBookToOnlineLibrary(OnlineLibrary ol) {
+        if(checkForCopy(ol.getUser(),ol.getBook())!=null){
+            return;
+        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(ol);
+        transaction.commit();
+        session.close();
+    }
+
+    public List<OnlineLibrary> checkForCopy(Users user , Book book){
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<OnlineLibrary> criteriaQuery = criteriaBuilder.createQuery(OnlineLibrary.class);
+        Root<OnlineLibrary> root = criteriaQuery.from(OnlineLibrary.class);
+        criteriaQuery.select(root).where(criteriaBuilder.and(criteriaBuilder.equal(root.get("user"),user) , criteriaBuilder.equal(root.get("book") ,book)));
+        TypedQuery<OnlineLibrary> query = session.createQuery(criteriaQuery);
+        List<OnlineLibrary>  ol  = query.getResultList();
+        if (ol.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return ol;
+        }
+    }
+
+    public List<OnlineLibrary> getOnlineLibrary(Users user){
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<OnlineLibrary> query = criteriaBuilder.createQuery(OnlineLibrary.class);
+        Root<OnlineLibrary> root = query.from(OnlineLibrary.class);
+        List<OnlineLibrary> ol = session.createQuery(query.where(criteriaBuilder.equal(root.get("user"), user))).list();
+
+        if (ol.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return ol;
+        }
+    }
+
+
+
 
 }
