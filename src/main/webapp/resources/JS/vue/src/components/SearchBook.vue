@@ -24,6 +24,7 @@
             </div>
         </div>
     </div>
+    <div v-else  class="noBook"></div>
 
 
 </template>

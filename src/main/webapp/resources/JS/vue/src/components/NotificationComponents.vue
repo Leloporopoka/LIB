@@ -71,9 +71,6 @@
         vertical-align: middle;
     }
 
-    .toast__cell {
-        display: inline-block;
-    }
 
     .add-margin {
         margin-top: 20px;
