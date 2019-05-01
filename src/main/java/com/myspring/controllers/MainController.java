@@ -311,12 +311,10 @@ public class MainController {
         ModelAndView mv = new ModelAndView("profile");
         Users user = getUserData();
         List<Reserve_Books> reserve_books = userBean.getReserveBookByUser(user);
-        List <Remind> rm =userBean.checkNotifications(user);
         List<Debt_Books> debt_Books = userBean.getDebtBookByUser(user);
         mv.addObject("reserve" , reserve_books);
         mv.addObject("user" , user);
         mv.addObject("debt" ,debt_Books );
-        mv.addObject("notifications",rm);
         return mv;
     }
 

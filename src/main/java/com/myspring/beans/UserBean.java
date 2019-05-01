@@ -452,18 +452,10 @@ public class UserBean {
         Root<Remind> root = query.from(Remind.class);
         List<Remind> rm = session.createQuery(query.where(criteriaBuilder.equal(root.get("user"), user))).list();
 
-
         if (rm.isEmpty()) {
              session.close();
              return null;
         } else {
-            for(int i=0;i<rm.size();i++){
-                if(rm.get(i).getBook().getAmount()>0){
-                    rm.get(i).setText("|| Book "+rm.get(i).getBook().getName()+" is now Available for Reserve ||");
-                }else{
-                    rm.get(i).setText("|| Book "+rm.get(i).getBook().getName()+" still Not Available for Reserve ||");
-                }
-            }
             session.close();
             return rm;
         }

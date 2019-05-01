@@ -19,8 +19,8 @@ public class Remind {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "availabilty")
+    private boolean availabilty;
 
     Remind(){
 
@@ -29,7 +29,7 @@ public class Remind {
     public Remind(Users user, Book book) {
         this.user = user;
         this.book = book;
-        this.text="";
+        this.availabilty=false;
     }
 
     public Users getUser() {
@@ -56,11 +56,11 @@ public class Remind {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public boolean isAvailabilty() {
+        return availabilty;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setAvailabilty(boolean availabilty) {
+        this.availabilty = availabilty;
     }
 }
