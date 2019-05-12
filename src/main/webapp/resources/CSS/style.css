@@ -90,10 +90,12 @@ nav a{
 }
 
 .search-container{
-
     width: 490px;
     display: block;
     margin: 30px auto;
+}
+.resultSearch .search-container{
+    width: 600px;
 }
 .form-control{
 
@@ -125,7 +127,7 @@ h1.popular{
     margin-top: 100px !important;
 }
 .search_result{
-    margin-top: 40px;
+    min-height: 443px;
 }
 .result{
     padding: 20px 10px 20px 30px;
