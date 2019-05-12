@@ -147,7 +147,7 @@ public class MainController {
 
         name = file.getOriginalFilename();
 
-        String rootPath = "C:\\Users\\MI\\IdeaProjects\\LIB\\src\\main\\webapp\\resources\\pic\\loadFiles";
+        String rootPath = "C:\\Users\\Damir\\Desktop\\LIBRORUM\\LIB\\src\\main\\webapp\\resources\\pic\\loadFiles";
         File dir = new File(rootPath);
 
         if (!dir.exists()) {
@@ -312,9 +312,11 @@ public class MainController {
         Users user = getUserData();
         List<Reserve_Books> reserve_books = userBean.getReserveBookByUser(user);
         List<Debt_Books> debt_Books = userBean.getDebtBookByUser(user);
+        List<OnlineLibrary>ol= userBean.getOnlineLibrary(user);
         mv.addObject("reserve" , reserve_books);
         mv.addObject("user" , user);
         mv.addObject("debt" ,debt_Books );
+        mv.addObject("online",ol);
         return mv;
     }
 
@@ -359,7 +361,7 @@ public class MainController {
 
 
     @RequestMapping (value="/bookRate",method = RequestMethod.POST)
-    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "rating") int rating){
+    public String Rating(@RequestParam(name = "user_id") Long user_id,@RequestParam(name = "book_id") Long book_id,@RequestParam(name = "reviewStars") int rating){
         userBean.addRating(new Rating(user_id,book_id,rating));
         return "redirect:book/"+book_id;
     }
@@ -367,6 +369,10 @@ public class MainController {
     @RequestMapping(value="/oread/{id}", method = RequestMethod.GET)
     public ModelAndView onlineRead(@PathVariable(name = "id") Long id){
         ModelAndView mv =new ModelAndView("ORead");
+        Users user = getUserData();
+        if(user!=null){
+            userBean.addBookToOnlineLibrary(new OnlineLibrary(user,userBean.getBookById(id)));
+        }
         mv.addObject("book",userBean.getOnlineReadBook(id));
         return mv;
     }
