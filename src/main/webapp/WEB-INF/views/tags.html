@@ -25,17 +25,17 @@
 
 
                 <div class="card">
-                    <div class="card-header bg-dark" id=th:value="heading${parentTag.id}">
+                    <div class="card-header bg-dark" th:id="'heading'+${parentTags.id}">
                         <h5 class="mb-0">
                             <button class="btn btn-dark" type="button" data-toggle="collapse"
-                                    data-target="#collapse${parentTag.id}" aria-expanded="false"
-                                    aria-controls="collapse${parentTag.id}"
+                                    th:data-target="'#collapse'+${parentTags.id}" aria-expanded="false"
+                                    th:aria-controls="'collapse'+${parentTags.id}"
                                      th:text="${parentTags.name}">
                             </button>
                         </h5>
                     </div>
 
-                    <div id="collapse${parentTag.id}" class="collapse" aria-labelledby="heading${parentTag.id}"
+                    <div th:id="'collapse'+${parentTags.id}" class="collapse" th:aria-labelledby="'heading'+${parentTags.id}"
                          data-parent="#accordionExample">
 
                             <div class="card-body" th:if="${child!=null}">

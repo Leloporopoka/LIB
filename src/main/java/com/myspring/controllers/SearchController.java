@@ -4,9 +4,7 @@ import com.myspring.beans.UserBean;
 import com.myspring.db.entities.Book;
 import com.myspring.db.entities.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -21,12 +19,6 @@ public class SearchController {
     List<Book> getAllBooks(Set<Tag>tags) {
         List<Book> books = userBean.getAllBooks();
         System.out.println("GET ALL BOOK TO SEARCH PAGE ");
-        List<Book> book = userBean.filter("Wac",null);
-        for(int i=0;i<book.size();i++){
-           if(!(book.get(i).getTags().equals(tags))){
-            book.remove(i);
-           }
-        }
         return books;
     }
     @RequestMapping(path = "/getAllTags" )
@@ -36,5 +28,16 @@ public class SearchController {
 
         System.out.println("GET ALL Tags TO SEARCH PAGE ");
         return tags;
+    }
+    @RequestMapping(path = "/getBookByTags" , method = RequestMethod.GET)
+        public @ResponseBody
+        List<Book> getBookbyTags(@RequestParam(name="child") String name) {
+            List<Book> book = userBean.filter("Wac",null);
+            for(int i=0;i<book.size();i++){
+                if(!(book.get(i).getTags().equals(tags))){
+                    book.remove(i);
+                }
+            }
+            return book;
     }
 }
