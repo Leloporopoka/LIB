@@ -6,16 +6,19 @@ import com.myspring.db.entities.Users;
 import com.myspring.db.entities.Book_;
 import com.myspring.db.entities.Tag_;
 import com.myspring.db.entities.*;
+import com.mysql.cj.api.mysqla.result.Resultset;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.type.StandardBasicTypes;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 import java.io.*;
@@ -23,6 +26,8 @@ import java.util.logging.*;
 import javax.xml.bind.DatatypeConverter;
 
 import static com.myspring.db.entities.Users_.login;
+import static org.hibernate.hql.internal.antlr.HqlTokenTypes.CONCAT;
+import static org.hibernate.hql.internal.antlr.HqlTokenTypes.LIKE;
 
 
 public class UserBean {
@@ -513,6 +518,19 @@ public class UserBean {
             session.close();
             return ol;
         }
+    }
+
+
+    public List<Book> filter(String name , List <Tag>tags) {
+        Session session = sessionFactory.openSession();
+        System.out.println(name);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Book> criteriaQuery = builder.createQuery(Book.class);
+        Root<Book> root = criteriaQuery.from(Book.class);
+        Predicate predicate = builder.like(root.<String>get("name"), "%"+name+"%");
+        List<Book> book = session.createQuery(criteriaQuery.where(predicate)).list();
+        session.close();
+        return book;
     }
 
 
