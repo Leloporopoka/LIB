@@ -19,19 +19,7 @@ public class Tag implements Serializable {
     @Column(name = "parent")
     private Long parents_id;
 
-//    @Column(name = "books")
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(joinColumns = {@JoinColumn(name = "tags_id")} ,
-//            inverseJoinColumns = {@JoinColumn(name="Book_id")})
-//    private Set<Book> books ;
-//
-//    public Set<Book> getBooks() {
-//        return books;
-//    }
-//
-//    public void setBooks(Set<Book> books) {
-//        this.books = books;
-//    }
+
 
     public Tag() {
     }
@@ -77,5 +65,15 @@ public class Tag implements Serializable {
     public Tag(String name , int type) {
         this.name = name;
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", parents_id=" + parents_id +
+                '}';
     }
 }

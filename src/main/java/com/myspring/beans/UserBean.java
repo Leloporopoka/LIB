@@ -521,7 +521,7 @@ public class UserBean {
     }
 
 
-    public List<Book> filter(String name , List <Tag>tags) {
+    public List<Book> filter(String name ) {
         Session session = sessionFactory.openSession();
         System.out.println(name);
         CriteriaBuilder builder = session.getCriteriaBuilder();

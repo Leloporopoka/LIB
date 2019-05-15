@@ -6,6 +6,8 @@ import com.myspring.db.entities.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -31,14 +33,30 @@ public class SearchController {
     }
     @RequestMapping(path = "/getBookByTags" , method = RequestMethod.GET)
         public @ResponseBody
-        List<Book> getBookbyTags(@RequestParam(name="tags") int[] tags,
+        List<Book> getBookbyTags(@RequestParam(name="tags") Long[] tags,
                                  @RequestParam(name="search") String search) {
-            List<Book> book = userBean.filter("Wac",null);
+            List<Book> book = userBean.filter(search);
+            Tag tag = userBean.getTagById(1L);
+
             for(int i=0;i<book.size();i++){
-//                if(!(book.get(i).getTags().equals())){
-//                    book.remove(i);
-//                }
+                boolean check =false;
+                for (Iterator<Tag> it = book.get(i).getTags().iterator(); it.hasNext(); ) {
+                    Tag tg = it.next();
+                    for(int j=0;j<tags.length;j++){
+                        if(tg.getId()==userBean.getTagById(tags[j]).getId()){
+                            check=true;
+                            break;
+                        }
+                    }
+                    if(!check){
+                        book.remove(i);
+                        i--;
+                    }
+                }
             }
+
+
+            System.out.println(book.size()+" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return book;
     }
 }
