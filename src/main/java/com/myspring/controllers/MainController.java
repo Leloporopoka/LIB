@@ -88,24 +88,14 @@ public class MainController {
     }
 
     @RequestMapping(value = "/search")
-    public ModelAndView Search(@RequestParam(name = "searchMessage") String search ,
-                               @RequestParam(name ="tag") String tag
+    public ModelAndView Search(@RequestParam(name = "searchMessage") String search
     ){
         List <Book> books;
-        if (!tag.equals("")){
-            if(search.equals("")){
-                books = userBean.getBookByTag(tag);
-            }else{
-                books = userBean.getBookByTagAndSearch(tag , search);
-            }
-        }
-        else{
-            books =userBean.getBook(search);
-        }
+        books =userBean.getBook(search);
         System.out.println(books);
         Users user = getUserData();
         ModelAndView mv = new ModelAndView("search");
-        mv.addObject("tag" , tag);
+
         mv.addObject("user", user);
         mv.addObject("books" , books);
         mv.addObject("search" , search);

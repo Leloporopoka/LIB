@@ -1779,6 +1779,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-component",
   props: {
@@ -1790,7 +1804,12 @@ __webpack_require__.r(__webpack_exports__);
       tagsUrl: '/api/getAllTags',
       answer: this.loadData,
       tags: null,
-      displayKey: 0
+      displayKey: 0,
+      searchByTagsUrl: '/api/getBookByTags',
+      searchMessage: this.search,
+      tagsSearchList: '',
+      tagsSearchMassiveId: [],
+      tagsSearchMassive: []
     };
   },
   created: function created() {
@@ -1804,15 +1823,31 @@ __webpack_require__.r(__webpack_exports__);
         _this.tags = response.data;
         _this.displaykey++;
       });
+    },
+    searchByTags: function searchByTags() {
+      var _this2 = this;
+
+      this.$axios.get(this.searchByTagsUrl + '?tags=' + this.tagsSearchMassiveId + '&search=' + this.searchMessage).then(function (response) {
+        _this2.answer = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    addSearchTags: function addSearchTags(tag) {
+      if (this.tagsSearchMassiveId.indexOf(tag.id)) {
+        this.tagsSearchMassiveId.push(tag.id);
+        this.tagsSearchMassive.push(tag);
+        this.searchByTags();
+      }
     }
   },
   computed: {
     filteredList: function filteredList() {
-      var _this2 = this;
+      var _this3 = this;
 
-      if (this.search == undefined) this.search = "";
+      if (this.searchMessage == undefined) this.searchMessage = "";
       return this.answer.filter(function (post) {
-        return post.name.toLowerCase().includes(_this2.search.toLowerCase());
+        return post.name.toLowerCase().includes(_this3.searchMessage.toLowerCase());
       });
     }
   }
@@ -1829,15 +1864,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3133,75 +3159,145 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _vm.answer != undefined
+  return _c("div", [
+    _c("div", { staticClass: "search resultSearch" }, [
+      _c("div", { staticClass: "search-container" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.searchMessage,
+              expression: "searchMessage"
+            }
+          ],
+          staticClass: "form-control ",
+          attrs: { type: "text", name: "searchMessage" },
+          domProps: {
+            value: _vm.searchMessage,
+            textContent: _vm._s(_vm.searchMessage)
+          },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchMessage = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "button search-icon",
+            attrs: { type: "submit" },
+            on: {
+              click: function($event) {
+                return _vm.searchByTags()
+              }
+            }
+          },
+          [_c("img", { attrs: { src: "resources\\pic\\search.png", alt: "" } })]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _vm.tagsSearchMassiveId != ""
       ? _c(
           "div",
-          { staticClass: "search_result col-9" },
-          _vm._l(_vm.filteredList, function(book) {
+          { staticClass: "search_tag_list" },
+          _vm._l(_vm.tagsSearchMassive, function(tag) {
             return _c(
               "div",
-              { staticClass: "result", attrs: { id: book.id } },
-              [
-                _c("div", { staticClass: "media" }, [
-                  _c("a", { attrs: { href: "book/" + book.id } }, [
-                    _c("img", {
-                      attrs: {
-                        height: "150px",
-                        width: "100px",
-                        src: "data:image/jpeg;base64," + book.base64
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "media-body" }, [
-                    _c("a", { attrs: { href: "book/" + book.id } }, [
-                      _c("h3", [_vm._v(_vm._s(book.name))])
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v("By " + _vm._s(book.author))]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
-                  ]),
-                  _vm._v(" "),
-                  book.amount == 0
-                    ? _c("div", { staticClass: "available" }, [
-                        _vm._v(
-                          "\n                    Not available\n                "
-                        )
-                      ])
-                    : _c("div", { staticClass: "available" }, [
-                        _vm._v(
-                          "\n                    Available\n                "
-                        )
-                      ])
-                ])
-              ]
+              { staticClass: "rounded d-inline", attrs: { id: tag.id } },
+              [_c("i", [_vm._v("x")]), _vm._v(_vm._s(tag.name))]
             )
           }),
           0
         )
-      : _c("div", { staticClass: "noBook col-9" }),
+      : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "col-3" }, [
-      _vm.tags != null
+    _c("div", { staticClass: "row search_container" }, [
+      _vm.answer != undefined
         ? _c(
             "div",
-            { key: _vm.displaykey, staticClass: "search-tags" },
-            _vm._l(_vm.tags, function(tag) {
+            { staticClass: "search_result col-9" },
+            _vm._l(_vm.filteredList, function(book) {
               return _c(
                 "div",
-                { staticClass: "single-search-tag", attrs: { id: tag.id } },
+                { staticClass: "result", attrs: { id: book.id } },
                 [
-                  _c("i", [_vm._v("+")]),
-                  _c("i", [_vm._v("-")]),
-                  _vm._v(_vm._s(tag.name) + "\n            ")
+                  _c("div", { staticClass: "media" }, [
+                    _c("a", { attrs: { href: "book/" + book.id } }, [
+                      _c("img", {
+                        attrs: {
+                          height: "150px",
+                          width: "100px",
+                          src: "data:image/jpeg;base64," + book.base64
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "media-body" }, [
+                      _c("a", { attrs: { href: "book/" + book.id } }, [
+                        _c("h3", [_vm._v(_vm._s(book.name))])
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v("By " + _vm._s(book.author))]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
+                    ]),
+                    _vm._v(" "),
+                    book.amount == 0
+                      ? _c("div", { staticClass: "available" }, [
+                          _vm._v(
+                            "\n                        Not available\n                    "
+                          )
+                        ])
+                      : _c("div", { staticClass: "available" }, [
+                          _vm._v(
+                            "\n                        Available\n                    "
+                          )
+                        ])
+                  ])
                 ]
               )
             }),
             0
           )
-        : _vm._e()
+        : _c("div", { staticClass: "noBook col-9" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-3" }, [
+        _vm.tags != null
+          ? _c(
+              "div",
+              { key: _vm.displaykey, staticClass: "search-tags" },
+              _vm._l(_vm.tags, function(tag) {
+                return _c(
+                  "div",
+                  { staticClass: "single-search-tag", attrs: { id: tag.id } },
+                  [
+                    _c(
+                      "i",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.addSearchTags(tag)
+                          }
+                        }
+                      },
+                      [_vm._v("+")]
+                    ),
+                    _c("i", [_vm._v("-")]),
+                    _vm._v(_vm._s(tag.name) + "\n                ")
+                  ]
+                )
+              }),
+              0
+            )
+          : _vm._e()
+      ])
     ])
   ])
 }
@@ -3227,61 +3323,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "search resultSearch" }, [
-        _c(
-          "form",
-          { staticClass: "search-container", attrs: { action: "search" } },
-          [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.search,
-                  expression: "search"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", name: "searchMessage" },
-              domProps: { value: _vm.search, textContent: _vm._s(_vm.search) },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.search = $event.target.value
-                }
-              }
-            }),
-            _vm._v(" "),
-            _vm._m(0)
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("search-component", {
-        key: _vm.displaykey,
-        attrs: { "load-data": _vm.answer, search: _vm.search }
-      })
-    ],
-    1
-  )
+  return _c("search-component", {
+    key: _vm.displaykey,
+    attrs: { "load-data": _vm.answer, search: _vm.search }
+  })
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "button search-icon", attrs: { type: "submit" } },
-      [_c("img", { attrs: { src: "resources\\pic\\search.png", alt: "" } })]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
