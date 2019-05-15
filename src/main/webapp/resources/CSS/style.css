@@ -92,7 +92,7 @@ nav a{
 .search-container{
     width: 490px;
     display: block;
-    margin: 30px auto;
+    margin: 30px auto 0px auto;
 }
 .resultSearch .search-container{
     width: 600px;
@@ -286,7 +286,24 @@ A:hover {text-decoration: none; }
 }
 .search_container{
     min-height: 741px;
+    width: 100%;
+}
+.search_tag_list{
+    width: 600px;
+    margin: 0px auto 20px auto;
 }
 /* */
-
-
+.tag_icon{
+    font-size: 13px;
+    color:#909090;
+}
+.tag_icon:hover{
+    color:#3c3c3c;
+}
+.tags_left_side_menu{
+    background-color: #f2f2f2 ;
+    height:443px;
+}
+.select_tag{
+    border-radius: 20px !important;
+}
