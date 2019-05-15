@@ -374,6 +374,7 @@ public class MainController {
             userBean.addBookToOnlineLibrary(new OnlineLibrary(user,userBean.getBookById(id)));
         }
         mv.addObject("book",userBean.getOnlineReadBook(id));
+        mv.addObject("user",user);
         return mv;
     }
 
