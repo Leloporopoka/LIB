@@ -1,14 +1,5 @@
 <template>
-    <div>
-    <div class="search resultSearch">
-        <form action="search" class="search-container">
-            <input type="text" class="form-control" name="searchMessage" v-model="search" v-text="search">
-            <!--<input hidden name="tag" value="" id="tag_input">-->
-            <button type="submit" class="button search-icon">
-                <img src="resources\pic\search.png" alt="">
-            </button>
-        </form>
-    </div>
+
     <search-component
             :key="displaykey"
             :load-data = "answer"
@@ -16,7 +7,7 @@
     >
 
     </search-component>
-    </div>
+
 </template>
 
 <script>

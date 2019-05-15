@@ -284,7 +284,9 @@ A:hover {text-decoration: none; }
 .noBook{
     margin-top: 100px;
 }
-
+.search_container{
+    min-height: 741px;
+}
 /* */
 
 

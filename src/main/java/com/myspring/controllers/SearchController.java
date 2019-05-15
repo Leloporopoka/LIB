@@ -16,7 +16,7 @@ public class SearchController {
     UserBean userBean;
     @RequestMapping(path = "/getAllBooks" )
     public @ResponseBody
-    List<Book> getAllBooks(Set<Tag>tags) {
+    List<Book> getAllBooks() {
         List<Book> books = userBean.getAllBooks();
         System.out.println("GET ALL BOOK TO SEARCH PAGE ");
         return books;
@@ -31,10 +31,13 @@ public class SearchController {
     }
     @RequestMapping(path = "/getBookByTags" , method = RequestMethod.GET)
         public @ResponseBody
-        List<Book> getBookbyTags(@RequestParam(name="child") String name) {
+        List<Book> getBookbyTags(@RequestParam(name="tags") int[] tags,
+                                 @RequestParam(name="search") String search) {
             List<Book> book = userBean.filter("Wac",null);
             for(int i=0;i<book.size();i++){
-
+//                if(!(book.get(i).getTags().equals())){
+//                    book.remove(i);
+//                }
             }
             return book;
     }
