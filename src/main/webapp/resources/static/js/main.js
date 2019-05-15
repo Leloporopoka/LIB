@@ -1793,6 +1793,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-component",
   props: {
@@ -1833,12 +1840,24 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    closeTag: function closeTag(tag) {
+      var index = this.tagsSearchMassiveId.indexOf(tag.id);
+
+      if (index != -1) {
+        this.tagsSearchMassiveId.splice(index, 1);
+        this.tagsSearchMassive.splice(index, 1);
+        this.searchByTags();
+      }
+    },
     addSearchTags: function addSearchTags(tag) {
-      if (this.tagsSearchMassiveId.indexOf(tag.id)) {
+      if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
         this.tagsSearchMassiveId.push(tag.id);
         this.tagsSearchMassive.push(tag);
         this.searchByTags();
       }
+    },
+    checkSelectTag: function checkSelectTag(tag) {
+      return this.tagsSearchMassiveId.indexOf(tag.id) == -1 ? true : false;
     }
   },
   computed: {
@@ -3161,7 +3180,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "search resultSearch" }, [
-      _c("div", { staticClass: "search-container" }, [
+      _c("div", { staticClass: "search-container mb-2" }, [
         _c("input", {
           directives: [
             {
@@ -3210,15 +3229,34 @@ var render = function() {
           _vm._l(_vm.tagsSearchMassive, function(tag) {
             return _c(
               "div",
-              { staticClass: "rounded d-inline", attrs: { id: tag.id } },
-              [_c("i", [_vm._v("x")]), _vm._v(_vm._s(tag.name))]
+              {
+                staticClass:
+                  " border border-secondary rounded d-inline-block p-1 pl-2 pr-2 mr-2 select_tag",
+                attrs: { id: tag.id }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "mr-1 text-dark mb-2 close-tag ",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.closeTag(tag)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                ),
+                _vm._v(_vm._s(tag.name) + "\n        ")
+              ]
             )
           }),
           0
         )
       : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "row search_container" }, [
+    _c("div", { staticClass: "row search_container " }, [
       _vm.answer != undefined
         ? _c(
             "div",
@@ -3268,7 +3306,9 @@ var render = function() {
           )
         : _c("div", { staticClass: "noBook col-9" }),
       _vm._v(" "),
-      _c("div", { staticClass: "col-3" }, [
+      _c("div", { staticClass: "col-3 pl-4 pr-4 pt-2 tags_left_side_menu" }, [
+        _c("h3", [_vm._v("Tags:")]),
+        _vm._v(" "),
         _vm.tags != null
           ? _c(
               "div",
@@ -3278,18 +3318,33 @@ var render = function() {
                   "div",
                   { staticClass: "single-search-tag", attrs: { id: tag.id } },
                   [
-                    _c(
-                      "i",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.addSearchTags(tag)
-                          }
-                        }
-                      },
-                      [_vm._v("+")]
-                    ),
-                    _c("i", [_vm._v("-")]),
+                    _vm.checkSelectTag(tag)
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "p-1 tag_icon",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                return _vm.addSearchTags(tag)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-plus" })]
+                        )
+                      : _c(
+                          "a",
+                          {
+                            staticClass: "p-1 tag_icon",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                return _vm.closeTag(tag)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-minus" })]
+                        ),
                     _vm._v(_vm._s(tag.name) + "\n                ")
                   ]
                 )
