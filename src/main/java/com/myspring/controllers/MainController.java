@@ -59,6 +59,7 @@ public class MainController {
         List<Reserve_Books>rbooks = userBean.getAllReservedBooks();
         List<Debt_Books>dbooks = userBean.getAllDebtBooks();
         List<Users>users=userBean.getAllUsers(1L);
+        List<Tag>tags= userBean.getAllTags();
 
 
 
@@ -67,6 +68,7 @@ public class MainController {
         mv.addObject("books", books);
         mv.addObject("rbooks",rbooks);
         mv.addObject("dbooks",dbooks);
+        mv.addObject("tags",tags);
 
 
         return mv;
@@ -385,6 +387,23 @@ public class MainController {
         return "redirect:book/"+book_id;
     }
 
+    @RequestMapping (value="/addTag",method = RequestMethod.POST)
+    public String AddTag(@RequestParam(name = "name") String name,@RequestParam(name = "parent") Long parent,@RequestParam(name = "type") int type){
+        userBean.addTag(new Tag(name,type,parent));
+        return "redirect:admin";
+    }
+
+    @RequestMapping (value="/deleteTag",method = RequestMethod.GET)
+    public String DeleteTag(@RequestParam(name = "id") Long id){
+        userBean.deleteTag(id);
+        return "redirect:admin";
+    }
+
+    @RequestMapping (value="/addTagToBook",method = RequestMethod.POST)
+    public String AddTagToBook(@RequestParam(name = "tag_id") Long tag_id,@RequestParam(name = "book_id") Long book_id){
+        userBean.addTagtoBook(tag_id,book_id);
+        return "redirect:admin";
+    }
 
 
     public Users getUserData(){

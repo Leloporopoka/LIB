@@ -533,6 +533,43 @@ public class UserBean {
         return book;
     }
 
+    public Tag getTagById(Long id){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteriaQuery = builder.createQuery(Tag.class);
+        Root root = criteriaQuery.from(Tag.class);
+        Predicate predicate = builder.equal(root.get("id"), id);
+        List<Tag> tags = session.createQuery(criteriaQuery.where(predicate)).list();
+        session.close();
+        if (tags.isEmpty()) {
+            return null;
+        } else {
+            return tags.get(0);
+        }
+    }
+
+    public void addTag(Tag tag) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(tag);
+        transaction.commit();
+        session.close();
+    }
+
+    public void addTagtoBook(Long tag_id,Long book_id) {
+        Book book = getBookById(book_id);
+        Tag tag = getTagById(tag_id);
+        book.getTags().add(tag);
+        editBook(book);
+    }
+
+    public void deleteTag(Long id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(getTagById(id));
+        transaction.commit();
+        session.close();
+    }
 
 
 

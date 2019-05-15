@@ -34,9 +34,7 @@ public class SearchController {
         List<Book> getBookbyTags(@RequestParam(name="child") String name) {
             List<Book> book = userBean.filter("Wac",null);
             for(int i=0;i<book.size();i++){
-                if(!(book.get(i).getTags().equals(tags))){
-                    book.remove(i);
-                }
+
             }
             return book;
     }
