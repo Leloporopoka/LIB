@@ -35,9 +35,9 @@ public class SearchController {
         public @ResponseBody
         List<Book> getBookbyTags(@RequestParam(name="tags") Long[] tags,
                                  @RequestParam(name="search") String search) {
-            List<Book> book = userBean.filter(search);
-            Tag tag = userBean.getTagById(1L);
 
+
+            List<Book> book = userBean.filter(search);
             for(int i=0;i<book.size();i++){
                 boolean check =false;
                 for (Iterator<Tag> it = book.get(i).getTags().iterator(); it.hasNext(); ) {
@@ -54,8 +54,6 @@ public class SearchController {
                     }
                     }
             }
-
-
             System.out.println(book.size()+" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return book;
     }
