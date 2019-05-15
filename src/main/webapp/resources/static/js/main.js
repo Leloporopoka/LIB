@@ -1772,6 +1772,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-component",
   props: {
@@ -1780,19 +1787,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      answer: this.loadData
+      tagsUrl: '/api/getAllTags',
+      answer: this.loadData,
+      tags: null,
+      displayKey: 0
     };
+  },
+  created: function created() {
+    this.loadTags(this.tagsUrl);
+  },
+  methods: {
+    loadTags: function loadTags(url) {
+      var _this = this;
+
+      return this.$axios.get(url).then(function (response) {
+        _this.tags = response.data;
+        _this.displaykey++;
+      });
+    }
   },
   computed: {
     filteredList: function filteredList() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.search == undefined) this.search = "";
       return this.answer.filter(function (post) {
-        return post.name.toLowerCase().includes(_this.search.toLowerCase());
-      }); // .push(this.answer.filter(post => {
-      //     return post.author.toLowerCase().includes(this.search.toLowerCase())
-      // }))
+        return post.name.toLowerCase().includes(_this2.search.toLowerCase());
+      });
     }
   }
 });
@@ -1835,12 +1856,15 @@ __webpack_require__.r(__webpack_exports__);
     return {
       displaykey: 0,
       answer: null,
-      search: "",
+      search: this.searchMessage,
       tag: null
     };
   },
+  props: {
+    searchMessage: String
+  },
   created: function created() {
-    this.loadData('/api/getAllBooks'); // this.getSearchMessage();
+    this.loadData('/api/getAllBooks');
   },
   methods: {
     loadData: function loadData(url) {
@@ -3109,46 +3133,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.answer != undefined
-    ? _c(
-        "div",
-        { staticClass: "search_result" },
-        _vm._l(_vm.filteredList, function(book) {
-          return _c("div", { staticClass: "result", attrs: { id: book.id } }, [
-            _c("div", { staticClass: "media" }, [
-              _c("a", { attrs: { href: "book/" + book.id } }, [
-                _c("img", {
-                  attrs: {
-                    height: "150px",
-                    width: "100px",
-                    src: "data:image/jpeg;base64," + book.base64
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "media-body" }, [
-                _c("a", { attrs: { href: "book/" + book.id } }, [
-                  _c("h3", [_vm._v(_vm._s(book.name))])
-                ]),
-                _vm._v(" "),
-                _c("p", [_vm._v("By " + _vm._s(book.author))]),
-                _vm._v(" "),
-                _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
-              ]),
-              _vm._v(" "),
-              book.amount == 0
-                ? _c("div", { staticClass: "available" }, [
-                    _vm._v("\n                Not available\n            ")
-                  ])
-                : _c("div", { staticClass: "available" }, [
-                    _vm._v("\n                Available\n            ")
-                  ])
-            ])
-          ])
-        }),
-        0
-      )
-    : _c("div", { staticClass: "noBook" })
+  return _c("div", { staticClass: "row" }, [
+    _vm.answer != undefined
+      ? _c(
+          "div",
+          { staticClass: "search_result col-9" },
+          _vm._l(_vm.filteredList, function(book) {
+            return _c(
+              "div",
+              { staticClass: "result", attrs: { id: book.id } },
+              [
+                _c("div", { staticClass: "media" }, [
+                  _c("a", { attrs: { href: "book/" + book.id } }, [
+                    _c("img", {
+                      attrs: {
+                        height: "150px",
+                        width: "100px",
+                        src: "data:image/jpeg;base64," + book.base64
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "media-body" }, [
+                    _c("a", { attrs: { href: "book/" + book.id } }, [
+                      _c("h3", [_vm._v(_vm._s(book.name))])
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [_vm._v("By " + _vm._s(book.author))]),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
+                  ]),
+                  _vm._v(" "),
+                  book.amount == 0
+                    ? _c("div", { staticClass: "available" }, [
+                        _vm._v(
+                          "\n                    Not available\n                "
+                        )
+                      ])
+                    : _c("div", { staticClass: "available" }, [
+                        _vm._v(
+                          "\n                    Available\n                "
+                        )
+                      ])
+                ])
+              ]
+            )
+          }),
+          0
+        )
+      : _c("div", { staticClass: "noBook col-9" }),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-3" }, [
+      _vm.tags != null
+        ? _c(
+            "div",
+            { key: _vm.displaykey, staticClass: "search-tags" },
+            _vm._l(_vm.tags, function(tag) {
+              return _c(
+                "div",
+                { staticClass: "single-search-tag", attrs: { id: tag.id } },
+                [
+                  _c("i", [_vm._v("+")]),
+                  _c("i", [_vm._v("-")]),
+                  _vm._v(_vm._s(tag.name) + "\n            ")
+                ]
+              )
+            }),
+            0
+          )
+        : _vm._e()
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

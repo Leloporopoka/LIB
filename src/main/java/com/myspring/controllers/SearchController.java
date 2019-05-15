@@ -2,6 +2,7 @@ package com.myspring.controllers;
 
 import com.myspring.beans.UserBean;
 import com.myspring.db.entities.Book;
+import com.myspring.db.entities.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,5 +21,12 @@ public class SearchController {
         List<Book> books = userBean.getAllBooks();
         System.out.println("GET ALL BOOK TO SEARCH PAGE ");
         return books;
+    }
+    @RequestMapping(path = "/getAllTags" )
+    public @ResponseBody
+    List<Tag> getAllTags() {
+        List<Tag> tags = userBean.getAllTags();
+        System.out.println("GET ALL Tags TO SEARCH PAGE ");
+        return tags;
     }
 }

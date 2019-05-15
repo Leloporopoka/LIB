@@ -21,68 +21,13 @@
 <body>
 <div th:replace="fragments/nav :: nav"></div>
 <div class="container">
+
     <div id="app">
-
-
-    <search-load ></search-load>
-
+    <search-load
+    th:search-message="${search}"
+    />
     </div>
 
-        <!--<div class="search resultSearch">-->
-
-            <!--<form action="search" class="search-container">-->
-
-                <!--<input type="text" class="form-control" name="search" value="${search}">-->
-
-
-                <!--<input hidden name="tag" value="${tag}" id="tag_input">-->
-                <!--<button type="submit" class="button search-icon">-->
-                    <!--<img  src="resources\pic\search.png" alt="">-->
-                <!--</button>-->
-                <!--<c:if test="${!(tag.equals(''))}">-->
-                <!--<div class="delete">-->
-                <!--<div class="search_tag">-->
-                    <!--<span>${tag} <button id="tag_close">x</button></span>-->
-                <!--</div>-->
-            <!--</div>-->
-                <!--</c:if>-->
-            <!--</form>-->
-
-
-
-        <!--</div>-->
-    <!--<div class="search_result">-->
-        <!--<c:if test="${!(books==null)}">-->
-            <!--<c:forEach items="${books}" var="book">-->
-        <!--<div class="${book.id} result">-->
-            <!--<div class="media">-->
-                <!--<a href="book/${book.id}">-->
-                     <!--<img height="150px" width="100px" src="data:image/jpeg;base64,${book.base64}">-->
-                <!--</a>-->
-                <!--<div class="media-body">-->
-        <!--<a  href="book/${book.id}"><h3>${book.name}</h3></a>-->
-        <!--<p>By ${book.author}</p>-->
-        <!--<p>${book.edition} edition</p>-->
-            <!--</div>-->
-        <!--<div class="available">-->
-            <!--<c:choose>-->
-                <!--<c:when test="${book.amount==0}">-->
-                    <!--<span>X</span>-->
-                    <!--Not available-->
-                <!--</c:when>-->
-                <!--<c:otherwise>-->
-                    <!--<span>&#10003</span>-->
-                    <!--Available-->
-                <!--</c:otherwise>-->
-            <!--</c:choose>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-            <!--</c:forEach>-->
-
-        <!--</c:if>-->
-
-    <!--</div>-->
 </div>
 <div th:replace="fragments/footer :: footer"></div>
 </div>

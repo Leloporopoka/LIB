@@ -190,6 +190,14 @@ public class UserBean {
         session.close();
     }
 
+    public List<Tag> getAllTags() {
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteriaQuery = builder.createQuery(Tag.class);
+        Root root = criteriaQuery.from(Tag.class);
+        List<Tag> tagList = session.createQuery(criteriaQuery).list();
+        return tagList;
+    }
     public List<Tag> getParentTags(){
         Session session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();

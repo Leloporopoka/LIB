@@ -27,13 +27,15 @@
             return {
                 displaykey: 0,
                 answer: null,
-                search : "",
+                search : this.searchMessage,
                 tag: null
             }
         },
+        props:{
+            searchMessage: String
+        },
         created() {
             this.loadData('/api/getAllBooks');
-            // this.getSearchMessage();
         },
 
         methods: {
