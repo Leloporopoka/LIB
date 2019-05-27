@@ -206,6 +206,16 @@ public class MainController {
         Users user = getUserData();
         Book book = userBean.getBookById(book_id);
         Double rating= userBean.countRating(book_id);
+        if(userBean.checkRemindForCopy(user,book)==null){
+            mv.addObject("remind" , 0);
+        }else{
+            mv.addObject("remind" , 1);
+        }
+        if(userBean.checkForAddRating(user.getId(),book.getId())==null){
+            mv.addObject("uRate" , 0);
+        }else{
+            mv.addObject("uRate" , 1);
+        }
         mv.addObject("user" , user);
         mv.addObject("book" , book);
         mv.addObject("rating",rating);
@@ -305,6 +315,7 @@ public class MainController {
         List<Reserve_Books> reserve_books = userBean.getReserveBookByUser(user);
         List<Debt_Books> debt_Books = userBean.getDebtBookByUser(user);
         List<OnlineLibrary>ol= userBean.getOnlineLibrary(user);
+
         mv.addObject("reserve" , reserve_books);
         mv.addObject("user" , user);
         mv.addObject("debt" ,debt_Books );

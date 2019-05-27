@@ -41,8 +41,7 @@ public class Book {
 
     @Column(name = "tags")
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = {@JoinColumn(name = "Book_id")} ,
-    inverseJoinColumns = {@JoinColumn(name="tags_id")})
+    @JoinTable(joinColumns = {@JoinColumn(name = "Book_id")} , inverseJoinColumns = {@JoinColumn(name="tags_id")})
     private Set<Tag> tags ;
 
     public Set<Tag> getTags() {

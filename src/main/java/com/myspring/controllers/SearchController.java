@@ -38,21 +38,21 @@ public class SearchController {
 
 
             List<Book> book = userBean.filter(search);
+            int sum=0;
+            for(int i=0;i<tags.length;i++){
+                sum+=tags[i];
+            }
             for(int i=0;i<book.size();i++){
-                boolean check =false;
+
+                int check=0;
                 for (Iterator<Tag> it = book.get(i).getTags().iterator(); it.hasNext(); ) {
                     Tag tg = it.next();
-                    for(int j=0;j<tags.length;j++){
-                        if(tg.getId()==userBean.getTagById(tags[j]).getId()){
-                            check=true;
-                            break;
-                        }
+                    check+=tg.getId();
                     }
-                    if(!check){
-                        book.remove(i);
-                        i--;
-                    }
-                    }
+                if(check!=sum){
+                    book.remove(i);
+                    i--;
+                }
             }
             System.out.println(book.size()+" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return book;

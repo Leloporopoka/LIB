@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.io.*;
 import java.util.logging.*;
@@ -399,6 +400,9 @@ public class UserBean {
     }
 
     public void addRating(Rating rate){
+        if(checkForAddRating(rate.getUser_id(),rate.getBook_id())!=null){
+            return;
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.save(rate);
@@ -450,12 +454,33 @@ public class UserBean {
     }
 
     public void RemindMe(Remind rm) {
+        if(checkRemindForCopy(rm.getUser(),rm.getBook())!=null){
+            return;
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.save(rm);
         transaction.commit();
         session.close();
     }
+
+    public List<Remind>  checkRemindForCopy(Users user ,Book book){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Remind> criteriaQuery = criteriaBuilder.createQuery(Remind.class);
+        Root<Remind> root = criteriaQuery.from(Remind.class);
+        criteriaQuery.select(root).where(criteriaBuilder.and(criteriaBuilder.equal(root.get("user"),user) , criteriaBuilder.equal(root.get("book") ,book)));
+        TypedQuery<Remind> query = session.createQuery(criteriaQuery);
+        List<Remind> rm  = query.getResultList();
+        if (rm.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return rm;
+        }
+    }
+
 
     public List<Remind> checkNotifications(Users user){
 
@@ -464,7 +489,6 @@ public class UserBean {
         CriteriaQuery<Remind> query = criteriaBuilder.createQuery(Remind.class);
         Root<Remind> root = query.from(Remind.class);
         List<Remind> rm = session.createQuery(query.where(criteriaBuilder.equal(root.get("user"), user))).list();
-
         if (rm.isEmpty()) {
              session.close();
              return null;
@@ -502,6 +526,25 @@ public class UserBean {
             return ol;
         }
     }
+
+    public List<Rating> checkForAddRating(Long user , Long book){
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Rating> criteriaQuery = criteriaBuilder.createQuery(Rating.class);
+        Root<Rating> root = criteriaQuery.from(Rating.class);
+        criteriaQuery.select(root).where(criteriaBuilder.and(criteriaBuilder.equal(root.get("user_id"),user) , criteriaBuilder.equal(root.get("book_id") ,book)));
+        TypedQuery<Rating> query = session.createQuery(criteriaQuery);
+        List<Rating>  rt  = query.getResultList();
+        if (rt.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return rt;
+        }
+    }
+
 
     public List<OnlineLibrary> getOnlineLibrary(Users user){
 
@@ -564,6 +607,19 @@ public class UserBean {
     }
 
     public void deleteTag(Long id) {
+        List<Book>books =getBookByTag(getTagById(id).getName());
+        if(books!=null){
+            for(int i=0;i<books.size();i++){
+                for (Iterator<Tag> it = books.get(i).getTags().iterator(); it.hasNext(); ) {
+                    Tag tg = it.next();
+                    if(tg.getId()==id){
+                        books.get(i).getTags().remove(tg);
+                        editBook(books.get(i));
+                    }
+                }
+            }
+        }
+
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.delete(getTagById(id));
