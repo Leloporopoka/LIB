@@ -1,18 +1,57 @@
 <template>
     <nav class="pagination pagination_type1">
-        <ol class="pagination__list">
-            <li class="pagination__group"><a href="#0" class="pagination__item pagination__control pagination__control_prev">prev</a></li>
-            <li class="pagination__group"><a href="#0" class="pagination__item">1</a></li>
-            <li class="pagination__group"><span class="pagination__item pagination__item_active">2</span></li>
-            <li class="pagination__group"><a href="#0" class="pagination__item">3</a></li>
-            <li class="pagination__group"><a href="#0" class="pagination__item pagination__control pagination__control_next">next</a></li>
+        <ol class="pagination__list  mx-auto mb-3" v-if="childListOfNumber!=0" :key="displayKey">
+            <li v-if="pagValue!=1" class="pagination__group"><a href="#" class="pagination__item pagination__control pagination__control_prev" v-on:click="decreaseValue()" >prev</a></li>
+            <li class="pagination__group" v-for="value in childListOfNumber"><a href="#" v-bind:class ="checkCurrent(value)"  v-on:click="setValue(value)">{{value}}</a></li>
+            <li v-if="pagValue!=childListOfNumber"class="pagination__group"><a href="#" class="pagination__item pagination__control pagination__control_next" v-on:click="increaseValue()">next</a></li>
         </ol>
     </nav>
 </template>
 
 <script>
     export default {
-        name: "PaginationComponent"
+        name: "PaginationComponent",
+        props:{
+            paginationValue: Number,
+            listNumber: Number
+        },
+        data (){
+            return{
+                pagValue : 0,
+                nullableValue : 0 ,
+                childListOfNumber: 0,
+                displayKey : 0
+            }
+        },
+        methods: {
+            increaseValue() {
+                this.pagValue += 1 ;
+                this.$emit('interface', this.pagValue);
+                this.displayKey++;
+            },
+            decreaseValue(){
+                this.pagValue -= 1 ;
+                this.$emit('interface', this.pagValue);
+                this.displayKey++;
+            },
+            checkCurrent(page){
+                if (this.pagValue ==page) return 'pagination__item pagination__item_active'
+                else return 'pagination__item';
+            },
+            setValue(value){
+                this.pagValue = value;
+                this.$emit('interface', this.pagValue);
+                this.displayKey++;
+            }
+
+        },
+        beforeMount () {
+            this.pagValue = this.paginationValue ;// save props data to itself's data and deal with it
+            this.childListOfNumber = this.listNumber;
+            this.displayKey+=1;
+        }
+
+
     }
 </script>
 

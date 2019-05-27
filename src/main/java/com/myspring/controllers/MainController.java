@@ -1,6 +1,7 @@
 package com.myspring.controllers;
 
 //import com.google.gson.Gson;
+import com.google.gson.Gson;
 import com.myspring.beans.UserBean;
 import com.myspring.db.entities.*;
 //import org.codehaus.jackson.map.ObjectMapper;
@@ -97,7 +98,7 @@ public class MainController {
         System.out.println(books);
         Users user = getUserData();
         ModelAndView mv = new ModelAndView("search");
-
+        mv.addObject("tag" , null);
         mv.addObject("user", user);
         mv.addObject("books" , books);
         mv.addObject("search" , search);
@@ -225,12 +226,13 @@ public class MainController {
     @RequestMapping(value = "searchByTag", method = RequestMethod.GET)
     public ModelAndView SearchByTag(HttpSession session,
                                     @RequestParam(name="child") String name){
-
+        Gson gson = new Gson();
+        String tagString = gson.toJson(userBean.getTagByName(name));
         Users user = getUserData();
         ModelAndView mv = new ModelAndView("search");
         mv.addObject("user", user);
         List<Book> Books = userBean.getBookByTag(name);
-        mv.addObject("tag" , name);
+        mv.addObject("tag" ,tagString );
         mv.addObject("books" ,Books );
         mv.addObject("search" , "");
         return mv;

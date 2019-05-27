@@ -1723,12 +1723,14 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error.message);
       });
+      this.displaykey++;
     },
     deleteNotification: function deleteNotification(notificationId) {
-      this.$axios.get(this.deleteNotificationUrl + '?notificationId=' + notificationId)["catch"](function (error) {
-        console.log(error);
+      var self = this;
+      this.$axios.get(this.deleteNotificationUrl + '?notificationId=' + notificationId).then(function (response) {
+        self.loadData(self.loadDataUrl);
       });
-      this.loadData(this.loadDataUrl);
+      this.displaykey++;
     },
     closeNotification: function closeNotification(notification) {
       var self = this;
@@ -1763,10 +1765,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "PaginationComponent"
+  name: "PaginationComponent",
+  props: {
+    paginationValue: Number,
+    listNumber: Number
+  },
+  data: function data() {
+    return {
+      pagValue: 0,
+      nullableValue: 0,
+      childListOfNumber: 0,
+      displayKey: 0
+    };
+  },
+  methods: {
+    increaseValue: function increaseValue() {
+      this.pagValue += 1;
+      this.$emit('interface', this.pagValue);
+      this.displayKey++;
+    },
+    decreaseValue: function decreaseValue() {
+      this.pagValue -= 1;
+      this.$emit('interface', this.pagValue);
+      this.displayKey++;
+    },
+    checkCurrent: function checkCurrent(page) {
+      if (this.pagValue == page) return 'pagination__item pagination__item_active';else return 'pagination__item';
+    },
+    setValue: function setValue(value) {
+      this.pagValue = value;
+      this.$emit('interface', this.pagValue);
+      this.displayKey++;
+    }
+  },
+  beforeMount: function beforeMount() {
+    this.pagValue = this.paginationValue; // save props data to itself's data and deal with it
+
+    this.childListOfNumber = this.listNumber;
+    this.displayKey += 1;
+  }
 });
 
 /***/ }),
@@ -1838,14 +1876,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-component",
   props: {
     loadData: Array,
-    search: String
+    search: String,
+    tagMessage: String
   },
   data: function data() {
     return {
+      paginationValue: 1,
       tagsUrl: '/api/getAllTags',
       answer: this.loadData,
       tags: null,
@@ -1859,6 +1905,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.loadTags(this.tagsUrl);
+    this.stringToJson(this.tagMessage);
   },
   methods: {
     loadTags: function loadTags(url) {
@@ -1888,7 +1935,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addSearchTags: function addSearchTags(tag) {
-      if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
+      if (tag != null) if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
         this.tagsSearchMassiveId.push(tag.id);
         this.tagsSearchMassive.push(tag);
         this.searchByTags();
@@ -1896,9 +1943,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     checkSelectTag: function checkSelectTag(tag) {
       return this.tagsSearchMassiveId.indexOf(tag.id) == -1 ? true : false;
-    }
-  },
-  computed: {
+    },
+    getDataFromPagination: function getDataFromPagination(event) {
+      console.log('data after child handle: ', event);
+      this.paginationValue = event;
+    },
+    check: function check() {
+      return this.filteredList[0] != undefined;
+    },
     filteredList: function filteredList() {
       var _this3 = this;
 
@@ -1906,6 +1958,41 @@ __webpack_require__.r(__webpack_exports__);
       return this.answer.filter(function (post) {
         return post.name.toLowerCase().includes(_this3.searchMessage.toLowerCase());
       });
+    },
+    numberOfList: function numberOfList() {
+      return Math.floor((this.filteredList().length + 6) / 6);
+    },
+    stringToJson: function stringToJson(value) {
+      var obj = JSON.parse(value);
+      this.addSearchTags(obj);
+    }
+  },
+  computed: {
+    // filteredList() {
+    //     if (this.searchMessage == undefined)
+    //         this.searchMessage = "";
+    //     return this.answer.filter(post => {
+    //         return post.name.toLowerCase().includes(this.searchMessage.toLowerCase())
+    //     })
+    // },
+    list: function list() {
+      var value = this.filteredList();
+
+      if (this.numberOfList() > 1) {
+        if (this.paginationValue == 1) {
+          value.length = 6;
+          return value;
+        } else if (this.paginationValue == this.numberOfList()) {
+          value.splice(0, (this.numberOfList() - 1) * 6);
+          return value;
+        } else if (this.filteredList().length <= 6) {
+          return value;
+        } else {
+          value.splice(0, (this.paginationValue - 1) * 6);
+          value.splice(6, this.filteredList().length - (this.paginationValue - 1) * 6);
+          return value;
+        }
+      }
     }
   }
 });
@@ -1933,6 +2020,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SearchLoadComponent",
   data: function data() {
@@ -1940,14 +2028,17 @@ __webpack_require__.r(__webpack_exports__);
       displaykey: 0,
       answer: null,
       search: this.searchMessage,
-      tag: null
+      tag: null,
+      tagMessageProp: null
     };
   },
   props: {
-    searchMessage: String
+    searchMessage: String,
+    tagMessage: String
   },
   created: function created() {
     this.loadData('/api/getAllBooks');
+    this.tagMessageProp = this.tagMessage;
   },
   methods: {
     loadData: function loadData(url) {
@@ -3287,62 +3378,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("nav", { staticClass: "pagination pagination_type1" }, [
+    _vm.childListOfNumber != 0
+      ? _c(
+          "ol",
+          {
+            key: _vm.displayKey,
+            staticClass: "pagination__list  mx-auto mb-3"
+          },
+          [
+            _vm.pagValue != 1
+              ? _c("li", { staticClass: "pagination__group" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "pagination__item pagination__control pagination__control_prev",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          return _vm.decreaseValue()
+                        }
+                      }
+                    },
+                    [_vm._v("prev")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.childListOfNumber, function(value) {
+              return _c("li", { staticClass: "pagination__group" }, [
+                _c(
+                  "a",
+                  {
+                    class: _vm.checkCurrent(value),
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.setValue(value)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(value))]
+                )
+              ])
+            }),
+            _vm._v(" "),
+            _vm.pagValue != _vm.childListOfNumber
+              ? _c("li", { staticClass: "pagination__group" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "pagination__item pagination__control pagination__control_next",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          return _vm.increaseValue()
+                        }
+                      }
+                    },
+                    [_vm._v("next")]
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      : _vm._e()
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("nav", { staticClass: "pagination pagination_type1" }, [
-      _c("ol", { staticClass: "pagination__list" }, [
-        _c("li", { staticClass: "pagination__group" }, [
-          _c(
-            "a",
-            {
-              staticClass:
-                "pagination__item pagination__control pagination__control_prev",
-              attrs: { href: "#0" }
-            },
-            [_vm._v("prev")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "pagination__group" }, [
-          _c("a", { staticClass: "pagination__item", attrs: { href: "#0" } }, [
-            _vm._v("1")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "pagination__group" }, [
-          _c(
-            "span",
-            { staticClass: "pagination__item pagination__item_active" },
-            [_vm._v("2")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "pagination__group" }, [
-          _c("a", { staticClass: "pagination__item", attrs: { href: "#0" } }, [
-            _vm._v("3")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "pagination__group" }, [
-          _c(
-            "a",
-            {
-              staticClass:
-                "pagination__item pagination__control pagination__control_next",
-              attrs: { href: "#0" }
-            },
-            [_vm._v("next")]
-          )
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -3453,7 +3559,7 @@ var render = function() {
           ? _c(
               "div",
               { staticClass: "search_result col-9" },
-              _vm._l(_vm.filteredList, function(book) {
+              _vm._l(_vm.list, function(book) {
                 return _c(
                   "div",
                   { staticClass: "result", attrs: { id: book.id } },
@@ -3547,7 +3653,16 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("pagination")
+      _vm.answer.length != 0
+        ? _c("pagination", {
+            key: _vm.displayKey,
+            attrs: {
+              "pagination-value": _vm.paginationValue,
+              "list-number": _vm.numberOfList()
+            },
+            on: { interface: _vm.getDataFromPagination }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -3576,7 +3691,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("search-component", {
     key: _vm.displaykey,
-    attrs: { "load-data": _vm.answer, search: _vm.search }
+    attrs: {
+      "load-data": _vm.answer,
+      search: _vm.search,
+      "tag-message": _vm.tagMessageProp
+    }
   })
 }
 var staticRenderFns = []

@@ -21,7 +21,7 @@
         <div class="row search_container ">
             <div class="search_result col-9" v-if="answer !=undefined">
 
-                <div class="result" v-for="book in filteredList " :id="book.id">
+                <div class="result" v-for="book in list " :id="book.id">
                     <div class="media">
                         <a :href="'book/' + book.id">
                             <img height="150px" width="100px" :src="'data:image/jpeg;base64,'+ book.base64">
@@ -46,13 +46,19 @@
                 <h3>Tags:</h3>
                 <div class="search-tags" :key="displaykey" v-if="tags != null">
                     <div class="single-search-tag" :id="tag.id" v-for="tag in tags">
-                        <a href="#" v-on:click="addSearchTags(tag)" class="p-1 tag_icon" v-if="checkSelectTag(tag)"><i class="fas fa-plus"></i></a><a
-                           v-else href="#" v-on:click="closeTag(tag)" class="p-1 tag_icon"><i class="fas fa-minus"></i></a>{{tag.name}}
+                        <a href="#" v-on:click="addSearchTags(tag)" class="p-1 tag_icon" v-if="checkSelectTag(tag)"><i
+                                class="fas fa-plus"></i></a><a
+                            v-else href="#" v-on:click="closeTag(tag)" class="p-1 tag_icon"><i class="fas fa-minus"></i></a>{{tag.name}}
                     </div>
                 </div>
             </div>
         </div>
-        <pagination></pagination>
+        <pagination v-if="answer.length != 0"
+                    :key="displayKey"
+                    :pagination-value="paginationValue"
+                    :list-number="numberOfList()"
+                    @interface="getDataFromPagination"
+        ></pagination>
     </div>
 </template>
 
@@ -62,10 +68,12 @@
         props: {
             loadData: Array,
             search: String,
+            tagMessage: String
         },
 
         data() {
             return {
+                paginationValue: 1,
                 tagsUrl: '/api/getAllTags',
                 answer: this.loadData,
                 tags: null,
@@ -79,6 +87,8 @@
         },
         created() {
             this.loadTags(this.tagsUrl);
+            this.stringToJson(this.tagMessage);
+
         },
 
         methods: {
@@ -108,6 +118,7 @@
                 }
             },
             addSearchTags(tag) {
+                if(tag!=null)
                 if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
                     this.tagsSearchMassiveId.push(tag.id);
                     this.tagsSearchMassive.push(tag);
@@ -115,22 +126,65 @@
                 }
 
             },
-            checkSelectTag(tag){
-                return this.tagsSearchMassiveId.indexOf(tag.id) == -1 ? true : false ;
-            }
-        },
+            checkSelectTag(tag) {
+                return this.tagsSearchMassiveId.indexOf(tag.id) == -1 ? true : false;
+            },
+            getDataFromPagination(event) {
+                console.log('data after child handle: ', event);
+                this.paginationValue=event;
 
+            },
+            check(){
 
-        computed: {
+              return  this.filteredList[0] !=undefined;
+            },
             filteredList() {
                 if (this.searchMessage == undefined)
                     this.searchMessage = "";
                 return this.answer.filter(post => {
                     return post.name.toLowerCase().includes(this.searchMessage.toLowerCase())
                 })
+            },
+            numberOfList() {
+                return Math.floor((this.filteredList().length + 6) / 6);
+            },
+            stringToJson(value){
+
+                var obj = JSON.parse(value);
+                this.addSearchTags(obj);
             }
+        },
 
 
+        computed: {
+            // filteredList() {
+            //     if (this.searchMessage == undefined)
+            //         this.searchMessage = "";
+            //     return this.answer.filter(post => {
+            //         return post.name.toLowerCase().includes(this.searchMessage.toLowerCase())
+            //     })
+            // },
+
+            list(){
+               var value=  this.filteredList();
+               if(this.numberOfList()>1) {
+                   if (this.paginationValue == 1) {
+                       value.length = 6;
+                        return value;
+                   }else if(this.paginationValue ==this.numberOfList()) {
+                       value.splice(0, (this.numberOfList()-1)*6  );
+                       return value;
+                   }else if(this.filteredList().length  <= 6){
+                       return value;
+                   }else {
+                       value.splice(0,(this.paginationValue-1)*6 );
+                       value.splice(6,this.filteredList().length-(this.paginationValue-1)*6 );
+                       return value;
+                   }
+
+
+               }
+            }
         }
     }
 

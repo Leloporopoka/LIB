@@ -279,6 +279,22 @@ public class UserBean {
         }
     }
 
+    public Tag getTagByName(String name){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteriaQuery = builder.createQuery(Tag.class);
+        Root root = criteriaQuery.from(Tag.class);
+        Predicate predicate = builder.equal(root.get("name"), name);
+        List<Tag> resBooks = session.createQuery(criteriaQuery.where(predicate)).list();
+        if (resBooks.isEmpty()) {
+            session.close();
+            return null;
+        } else {
+            session.close();
+            return resBooks.get(0);
+        }
+    }
+
     public List <Users> getAllUsers(Long id){
         Session session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();

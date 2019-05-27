@@ -45,15 +45,14 @@
                 }).catch(error => {
                     console.log(error.message);
                 });
-
+                this.displaykey++;
             },
             deleteNotification(notificationId){
-                this.$axios.get(this.deleteNotificationUrl + '?notificationId='  + notificationId )
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                this.loadData(this.loadDataUrl)
-
+                var self = this;
+                this.$axios.get(this.deleteNotificationUrl + '?notificationId='  + notificationId ).then(response => {
+                    self.loadData(self.loadDataUrl);
+                });
+                this.displaykey++;
             },
             closeNotification(notification) {
                 var self = this;

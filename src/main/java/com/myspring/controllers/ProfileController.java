@@ -25,8 +25,9 @@ public class ProfileController {
 
     @RequestMapping(path = "/deleteNotification" )
     public @ResponseBody
-    void deleteNotification(@RequestParam("notificationId") Long id) {
+     boolean deleteNotification(@RequestParam("notificationId") Long id) {
         userBean.deleteNotification(id);
+        return true;
     }
 
 

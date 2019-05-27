@@ -4,6 +4,7 @@
             :key="displaykey"
             :load-data = "answer"
             :search = "search"
+            :tag-message="tagMessageProp"
     >
 
     </search-component>
@@ -19,14 +20,17 @@
                 displaykey: 0,
                 answer: null,
                 search : this.searchMessage,
-                tag: null
+                tag: null,
+                tagMessageProp: null,
             }
         },
         props:{
-            searchMessage: String
+            searchMessage: String,
+            tagMessage: String
         },
         created() {
             this.loadData('/api/getAllBooks');
+            this.tagMessageProp = this.tagMessage;
         },
 
         methods: {
@@ -37,6 +41,7 @@
                 });
 
             },
+
             // getSearchMessage(){
             //     var url = new URL(window.location.href);
             //     this.search = url.searchParams.get("seachMessage");
