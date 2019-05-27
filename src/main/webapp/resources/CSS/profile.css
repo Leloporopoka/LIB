@@ -126,3 +126,12 @@ header a
 {
     width: 13vw;
 }
+.toast__close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: darkgrey;
+}
+.toast__close:hover{
+    color: black;
+}

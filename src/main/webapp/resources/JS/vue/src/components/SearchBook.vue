@@ -33,11 +33,9 @@
                             <p>{{book.edition}} edition</p>
                         </div>
                         <div v-if="book.amount==0" class="available">
-                            <!--<span>X</span>-->
                             Not available
                         </div>
                         <div v-else class="available">
-                            <!--<span>&#10003</span>-->
                             Available
                         </div>
                     </div>

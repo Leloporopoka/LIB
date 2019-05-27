@@ -90,3 +90,22 @@ body {
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+.tab-pane  {
+  outline: none;
+}
+.sidebar .fancyTab .nav-link{
+  color: #999 !important;
+}
+.sidebar .fancyTab .nav-link:hover ,
+.sidebar .fancyTab .nav-link:focus ,
+.sidebar .fancyTab .nav-link:active{
+  color:#333 !important;
+}
+.admin__table__option{
+  position: absolute;
+  right: 60px;
+  top: 14px;
+}
+.admin__table__option a{
+  display: inline-block;
+}
