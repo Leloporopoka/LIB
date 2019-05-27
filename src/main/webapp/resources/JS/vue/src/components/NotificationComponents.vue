@@ -1,15 +1,16 @@
 <template>
     <div>
-        <div class="toast__container"  v-if="notification !=undefined">
-            <div class="toast__cell"  v-for="not in notification " :id="not.id">
+        <div class="toast__container"  v-if="notificationsList !=undefined">
+            <div class="toast__cell"  v-for="not in notificationsList " :id="not.id">
                 <div class="toast" v-bind:class="not.availabilty ?    'toastGreen' :'toastYellow' " >
+                    <a href="#" class="toast__close" v-on:click="closeNotification(not)">  <i class="fas fa-times"></i></a>
                     <div class="toast__content" v-if="not.availabilty">
                         <p class="toast__type" >{{not.book.name}}</p>
-                        <p class="toast__message">Book "{{not.book.name}}" became available for reservation. You can reserve it or take it from our library.</p>
+                        <p class="toast__message">Book <a  v-bind:href="'/book/'+ not.book.id" >"{{not.book.name}}"</a> became available for reservation. You can reserve it or take it from our library.</p>
                     </div>
                     <div class="toast__content" v-if="!not.availabilty">
                         <p class="toast__type" >{{not.book.name}}</p>
-                        <p class="toast__message">Book "{{not.book.name}}" still not available for reservation. This may change when there are instances of this book in the library.</p>
+                        <p class="toast__message">Book <a  v-bind:href="'/book/'+ not.book.id" >"{{not.book.name}}"</a> still not available for reservation. This may change when there are instances of this book in the library.</p>
                     </div>
                 </div>
 
@@ -26,28 +27,43 @@
         data() {
             return {
                 displaykey: 0,
-                notification: null,
+                notificationsList: null,
+                deleteNotificationUrl : '/profile/deleteNotification',
+                loadDataUrl: '/profile/getAllNotifications',
             }
         },
         mounted() {
-            this.loadData('/profile/getAllNotifications');
+            this.loadData(this.loadDataUrl);
         },
         methods: {
             loadData(url) {
                 return this.$axios.get(url).then(response => {
 
-                    this.notification = response.data;
+                    this.notificationsList = response.data;
                     this.displaykey++;
                 }).catch(error => {
                     console.log(error.message);
                 });
 
             },
-            closeNotification(e){
-                e.preventDefault();
-                var parent = $(this).parent('.toast');
-                parent.fadeOut("slow", function() { $(this).remove(); } );
-            }
+            deleteNotification(notificationId){
+                this.$axios.get(this.deleteNotificationUrl + '?notificationId='  + notificationId )
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                this.loadData(this.loadDataUrl)
+                debugger;
+            },
+            closeNotification(notification) {
+                var self = this;
+                this.notificationsList.forEach(function (not) {
+                    if(not.id == notification.id)
+                    {
+                        self.deleteNotification(not.id);
+                        return not.id == notification.id;
+                    }
+                });
+            },
 
         }
     }
@@ -134,16 +150,6 @@
         padding-right: 60px;
     }
 
-    .toast__close {
-        position: absolute;
-        right: 22px;
-        top: 50%;
-        width: 14px;
-        cursor: pointer;
-        height: 14px;
-        fill: #878787;
-        transform: translateY(-50%);
-    }
 
     .toastGreen .toast__icon {
         background-color: #2BDE3F;

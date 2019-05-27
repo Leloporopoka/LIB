@@ -1698,33 +1698,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NotificationComponents",
   data: function data() {
     return {
       displaykey: 0,
-      notification: null
+      notificationsList: null,
+      deleteNotificationUrl: '/profile/deleteNotification',
+      loadDataUrl: '/profile/getAllNotifications'
     };
   },
   mounted: function mounted() {
-    this.loadData('/profile/getAllNotifications');
+    this.loadData(this.loadDataUrl);
   },
   methods: {
     loadData: function loadData(url) {
       var _this = this;
 
       return this.$axios.get(url).then(function (response) {
-        _this.notification = response.data;
+        _this.notificationsList = response.data;
         _this.displaykey++;
       })["catch"](function (error) {
         console.log(error.message);
       });
     },
-    closeNotification: function closeNotification(e) {
-      e.preventDefault();
-      var parent = $(this).parent('.toast');
-      parent.fadeOut("slow", function () {
-        $(this).remove();
+    deleteNotification: function deleteNotification(notificationId) {
+      this.$axios.get(this.deleteNotificationUrl + '?notificationId=' + notificationId)["catch"](function (error) {
+        console.log(error);
+      });
+      this.loadData(this.loadDataUrl);
+      debugger;
+    },
+    closeNotification: function closeNotification(notification) {
+      var self = this;
+      this.notificationsList.forEach(function (not) {
+        if (not.id == notification.id) {
+          self.deleteNotification(not.id);
+          return not.id == notification.id;
+        }
       });
     }
   }
@@ -1741,8 +1753,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -1937,7 +1947,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../../../node_
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i);", ""]);
 
 // module
-exports.push([module.i, "\nhtml[data-v-4625f38f], body[data-v-4625f38f] {\n    height: 100%;\n    width: 100%;\n    font-family: 'Raleway', sans-serif;\n    background-color: #efefef;\n    display: table;\n    text-align: center;\n}\n.toast__container[data-v-4625f38f] {\n    display: table-cell;\n    vertical-align: middle;\n}\n.add-margin[data-v-4625f38f] {\n    margin-top: 20px;\n}\n.toast__svg[data-v-4625f38f] {\n    fill: #fff;\n}\n.toast[data-v-4625f38f] {\n    text-align: left;\n    padding: 21px 0;\n    background-color: #fff;\n    border-radius: 4px;\n    margin-bottom: 20px;\n    top: 0px;\n    position: relative;\n    box-shadow: 1px 7px 14px -5px rgba(0, 0, 0, 0.2);\n}\n.toast[data-v-4625f38f]:before {\n    content: '';\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 4px;\n    height: 100%;\n    border-top-left-radius: 4px;\n    border-bottom-left-radius: 4px;\n}\n.toast__icon[data-v-4625f38f] {\n    position: absolute;\n    top: 50%;\n    left: 22px;\n    transform: translateY(-50%);\n    width: 14px;\n    height: 14px;\n    padding: 7px;\n    border-radius: 50%;\n    display: inline-block;\n}\n.toast__type[data-v-4625f38f] {\n    color: #3e3e3e;\n    font-weight: 700;\n    margin-top: 0;\n    margin-bottom: 8px;\n}\n.toast__message[data-v-4625f38f] {\n    font-size: 14px;\n    margin-top: 0;\n    margin-bottom: 0;\n    color: #878787;\n}\n.toast__content[data-v-4625f38f] {\n    padding-left: 40px;\n    padding-right: 60px;\n}\n.toast__close[data-v-4625f38f] {\n    position: absolute;\n    right: 22px;\n    top: 50%;\n    width: 14px;\n    cursor: pointer;\n    height: 14px;\n    fill: #878787;\n    transform: translateY(-50%);\n}\n.toastGreen .toast__icon[data-v-4625f38f] {\n    background-color: #2BDE3F;\n}\n.toastGreen[data-v-4625f38f]:before {\n    background-color: #2BDE3F;\n}\n.toast--blue .toast__icon[data-v-4625f38f] {\n    background-color: #1D72F3;\n}\n.toast--blue[data-v-4625f38f]:before {\n    background-color: #1D72F3;\n}\n.toastYellow .toast__icon[data-v-4625f38f] {\n    background-color: #FFC007;\n}\n.toastYellow[data-v-4625f38f]:before {\n    background-color: #FFC007;\n}\n", ""]);
+exports.push([module.i, "\nhtml[data-v-4625f38f], body[data-v-4625f38f] {\n    height: 100%;\n    width: 100%;\n    font-family: 'Raleway', sans-serif;\n    background-color: #efefef;\n    display: table;\n    text-align: center;\n}\n.toast__container[data-v-4625f38f] {\n    display: table-cell;\n    vertical-align: middle;\n}\n.add-margin[data-v-4625f38f] {\n    margin-top: 20px;\n}\n.toast__svg[data-v-4625f38f] {\n    fill: #fff;\n}\n.toast[data-v-4625f38f] {\n    text-align: left;\n    padding: 21px 0;\n    background-color: #fff;\n    border-radius: 4px;\n    margin-bottom: 20px;\n    top: 0px;\n    position: relative;\n    box-shadow: 1px 7px 14px -5px rgba(0, 0, 0, 0.2);\n}\n.toast[data-v-4625f38f]:before {\n    content: '';\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 4px;\n    height: 100%;\n    border-top-left-radius: 4px;\n    border-bottom-left-radius: 4px;\n}\n.toast__icon[data-v-4625f38f] {\n    position: absolute;\n    top: 50%;\n    left: 22px;\n    transform: translateY(-50%);\n    width: 14px;\n    height: 14px;\n    padding: 7px;\n    border-radius: 50%;\n    display: inline-block;\n}\n.toast__type[data-v-4625f38f] {\n    color: #3e3e3e;\n    font-weight: 700;\n    margin-top: 0;\n    margin-bottom: 8px;\n}\n.toast__message[data-v-4625f38f] {\n    font-size: 14px;\n    margin-top: 0;\n    margin-bottom: 0;\n    color: #878787;\n}\n.toast__content[data-v-4625f38f] {\n    padding-left: 40px;\n    padding-right: 60px;\n}\n.toastGreen .toast__icon[data-v-4625f38f] {\n    background-color: #2BDE3F;\n}\n.toastGreen[data-v-4625f38f]:before {\n    background-color: #2BDE3F;\n}\n.toast--blue .toast__icon[data-v-4625f38f] {\n    background-color: #1D72F3;\n}\n.toast--blue[data-v-4625f38f]:before {\n    background-color: #1D72F3;\n}\n.toastYellow .toast__icon[data-v-4625f38f] {\n    background-color: #FFC007;\n}\n.toastYellow[data-v-4625f38f]:before {\n    background-color: #FFC007;\n}\n", ""]);
 
 // exports
 
@@ -3099,11 +3109,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.notification != undefined
+    _vm.notificationsList != undefined
       ? _c(
           "div",
           { staticClass: "toast__container" },
-          _vm._l(_vm.notification, function(not) {
+          _vm._l(_vm.notificationsList, function(not) {
             return _c(
               "div",
               { staticClass: "toast__cell", attrs: { id: not.id } },
@@ -3115,6 +3125,20 @@ var render = function() {
                     class: not.availabilty ? "toastGreen" : "toastYellow"
                   },
                   [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "toast__close",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            return _vm.closeNotification(not)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
+                    ),
+                    _vm._v(" "),
                     not.availabilty
                       ? _c("div", { staticClass: "toast__content" }, [
                           _c("p", { staticClass: "toast__type" }, [
@@ -3122,10 +3146,14 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("p", { staticClass: "toast__message" }, [
+                            _vm._v("Book "),
+                            _c(
+                              "a",
+                              { attrs: { href: "/book/" + not.book.id } },
+                              [_vm._v('"' + _vm._s(not.book.name) + '"')]
+                            ),
                             _vm._v(
-                              'Book "' +
-                                _vm._s(not.book.name) +
-                                '" became available for reservation. You can reserve it or take it from our library.'
+                              " became available for reservation. You can reserve it or take it from our library."
                             )
                           ])
                         ])
@@ -3138,10 +3166,14 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("p", { staticClass: "toast__message" }, [
+                            _vm._v("Book "),
+                            _c(
+                              "a",
+                              { attrs: { href: "/book/" + not.book.id } },
+                              [_vm._v('"' + _vm._s(not.book.name) + '"')]
+                            ),
                             _vm._v(
-                              'Book "' +
-                                _vm._s(not.book.name) +
-                                '" still not available for reservation. This may change when there are instances of this book in the library.'
+                              " still not available for reservation. This may change when there are instances of this book in the library."
                             )
                           ])
                         ])

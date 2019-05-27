@@ -306,7 +306,7 @@ public class MainController {
         List<Debt_Books> debt_Books = userBean.getDebtBookByUser(user);
         List<OnlineLibrary>ol= userBean.getOnlineLibrary(user);
         mv.addObject("reserve" , reserve_books);
-        mv.addObject("user" , user);
+        mv.addObject("user" , user.getName());
         mv.addObject("debt" ,debt_Books );
         mv.addObject("online",ol);
         return mv;
