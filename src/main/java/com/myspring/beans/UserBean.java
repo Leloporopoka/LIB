@@ -591,6 +591,21 @@ public class UserBean {
         }
     }
 
+    public Remind getNotificationById(Long id){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Remind> criteriaQuery = builder.createQuery(Remind.class);
+        Root root = criteriaQuery.from(Remind.class);
+        Predicate predicate = builder.equal(root.get("id"), id);
+        List<Remind> rm = session.createQuery(criteriaQuery.where(predicate)).list();
+        session.close();
+        if (rm.isEmpty()) {
+            return null;
+        } else {
+            return rm.get(0);
+        }
+    }
+
     public void addTag(Tag tag) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -623,6 +638,14 @@ public class UserBean {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.delete(getTagById(id));
+        transaction.commit();
+        session.close();
+    }
+
+    public void deleteNotification(Long id){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(getNotificationById(id));
         transaction.commit();
         session.close();
     }
