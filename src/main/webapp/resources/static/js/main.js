@@ -1699,6 +1699,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NotificationComponents",
   data: function data() {
@@ -1728,7 +1729,6 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
       this.loadData(this.loadDataUrl);
-      debugger;
     },
     closeNotification: function closeNotification(notification) {
       var self = this;
@@ -3189,7 +3189,7 @@ var render = function() {
     _vm.notificationsList != undefined
       ? _c(
           "div",
-          { staticClass: "toast__container" },
+          { key: _vm.displaykey, staticClass: "toast__container" },
           _vm._l(_vm.notificationsList, function(not) {
             return _c(
               "div",

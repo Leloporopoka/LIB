@@ -1,6 +1,6 @@
 <template>
-    <div :key="displaykey">
-        <div class="toast__container"  v-if="notificationsList !=undefined">
+    <div >
+        <div class="toast__container"  v-if="notificationsList !=undefined" :key="displaykey">
             <div class="toast__cell"  v-for="not in notificationsList " :id="not.id">
                 <div class="toast" v-bind:class="not.availabilty ?    'toastGreen' :'toastYellow' " >
                     <a href="#" class="toast__close" v-on:click="closeNotification(not)">  <i class="fas fa-times"></i></a>
@@ -53,7 +53,7 @@
                         console.log(error);
                     });
                 this.loadData(this.loadDataUrl)
-                debugger;
+
             },
             closeNotification(notification) {
                 var self = this;
