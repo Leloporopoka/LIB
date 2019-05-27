@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :key="displaykey">
         <div class="toast__container"  v-if="notificationsList !=undefined">
             <div class="toast__cell"  v-for="not in notificationsList " :id="not.id">
                 <div class="toast" v-bind:class="not.availabilty ?    'toastGreen' :'toastYellow' " >
@@ -11,6 +11,7 @@
                     <div class="toast__content" v-if="!not.availabilty">
                         <p class="toast__type" >{{not.book.name}}</p>
                         <p class="toast__message">Book <a  v-bind:href="'/book/'+ not.book.id" >"{{not.book.name}}"</a> still not available for reservation. This may change when there are instances of this book in the library.</p>
+
                     </div>
                 </div>
 

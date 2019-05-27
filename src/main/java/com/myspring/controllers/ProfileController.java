@@ -10,8 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,6 +22,12 @@ import java.util.List;
 public class ProfileController {
     @Autowired
     UserBean userBean;
+
+    @RequestMapping(path = "/deleteNotification" )
+    public @ResponseBody
+    void deleteNotification(@RequestParam("notificationId") Long id) {
+        userBean.deleteNotification(id);
+    }
 
 
 
@@ -44,7 +52,6 @@ public class ProfileController {
             user = userBean.getUser(ud.getUsername());
         }
         return user;
-
     }
 }
 
