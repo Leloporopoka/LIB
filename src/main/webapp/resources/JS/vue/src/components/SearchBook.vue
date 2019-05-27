@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :key="displayKey">
         <div class="search resultSearch">
             <div class="search-container mb-2">
                 <input type="text" class="form-control " name="searchMessage" v-model="searchMessage"
@@ -44,7 +44,7 @@
             <div v-else class="noBook col-9"></div>
             <div class="col-3 pl-4 pr-4 pt-2 tags_left_side_menu">
                 <h3>Tags:</h3>
-                <div class="search-tags" :key="displaykey" v-if="tags != null">
+                <div class="search-tags"  v-if="tags != null">
                     <div class="single-search-tag" :id="tag.id" v-for="tag in tags">
                         <a href="#" v-on:click="addSearchTags(tag)" class="p-1 tag_icon" v-if="checkSelectTag(tag)"><i
                                 class="fas fa-plus"></i></a><a
@@ -53,12 +53,14 @@
                 </div>
             </div>
         </div>
-        <pagination v-if="answer.length != 0"
-                    :key="displayKey"
-                    :pagination-value="paginationValue"
-                    :list-number="numberOfList()"
-                    @interface="getDataFromPagination"
-        ></pagination>
+        <div v-if="answer != null" >
+            <pagination v-if="answer.length != 0"
+
+                        :pagination-value="paginationValue"
+                        :list-number="numberOfList()"
+                        @interface="getDataFromPagination"
+            ></pagination>
+        </div>
     </div>
 </template>
 
@@ -95,7 +97,7 @@
             loadTags(url) {
                 return this.$axios.get(url).then(response => {
                     this.tags = response.data;
-                    this.displaykey++;
+                    this.displayKey++;
                 });
 
             },
@@ -103,7 +105,8 @@
 
                 this.$axios.get(this.searchByTagsUrl + '?tags=' + this.tagsSearchMassiveId + '&search=' + this.searchMessage)
                     .then(response => {
-                        this.answer = response.data
+                        this.answer = response.data;
+                        this.displayKey++;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -118,12 +121,12 @@
                 }
             },
             addSearchTags(tag) {
-                if(tag!=null)
-                if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
-                    this.tagsSearchMassiveId.push(tag.id);
-                    this.tagsSearchMassive.push(tag);
-                    this.searchByTags();
-                }
+                if (tag != null)
+                    if (this.tagsSearchMassiveId.indexOf(tag.id) == -1) {
+                        this.tagsSearchMassiveId.push(tag.id);
+                        this.tagsSearchMassive.push(tag);
+                        this.searchByTags();
+                    }
 
             },
             checkSelectTag(tag) {
@@ -131,12 +134,12 @@
             },
             getDataFromPagination(event) {
                 console.log('data after child handle: ', event);
-                this.paginationValue=event;
+                this.paginationValue = event;
 
             },
-            check(){
+            check() {
 
-              return  this.filteredList[0] !=undefined;
+                return this.filteredList[0] != undefined;
             },
             filteredList() {
                 if (this.searchMessage == undefined)
@@ -148,10 +151,11 @@
             numberOfList() {
                 return Math.floor((this.filteredList().length + 6) / 6);
             },
-            stringToJson(value){
-
-                var obj = JSON.parse(value);
-                this.addSearchTags(obj);
+            stringToJson(value) {
+                if (value != undefined) {
+                    var obj = JSON.parse(value);
+                    this.addSearchTags(obj);
+                }
             }
         },
 
@@ -165,25 +169,34 @@
             //     })
             // },
 
-            list(){
-               var value=  this.filteredList();
-               if(this.numberOfList()>1) {
-                   if (this.paginationValue == 1) {
-                       value.length = 6;
+            list() {
+                var value = this.filteredList();
+                if (value != null)
+                    if (value.length > 6) {
+                        if (this.numberOfList() > 1) {
+                            if (this.paginationValue == 1) {
+                                value.length = 6;
+                                this.displayKey++;
+                                return value;
+                            } else if (this.paginationValue == this.numberOfList()) {
+                                value.splice(0, (this.numberOfList() - 1) * 6);
+                                this.displayKey++;
+                                return value;
+                            } else if (this.filteredList().length <= 6) {
+                                this.displayKey++;
+                                return value;
+                            } else {
+                                value.splice(0, (this.paginationValue - 1) * 6);
+                                value.splice(6, this.filteredList().length - (this.paginationValue - 1) * 6);
+                                this.displayKey++;
+                                return value;
+                            }
+
+                        }
+                    } else {
+                        this.displayKey++;
                         return value;
-                   }else if(this.paginationValue ==this.numberOfList()) {
-                       value.splice(0, (this.numberOfList()-1)*6  );
-                       return value;
-                   }else if(this.filteredList().length  <= 6){
-                       return value;
-                   }else {
-                       value.splice(0,(this.paginationValue-1)*6 );
-                       value.splice(6,this.filteredList().length-(this.paginationValue-1)*6 );
-                       return value;
-                   }
-
-
-               }
+                    }
             }
         }
     }

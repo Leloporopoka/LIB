@@ -1882,6 +1882,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-component",
   props: {
@@ -1913,7 +1915,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.$axios.get(url).then(function (response) {
         _this.tags = response.data;
-        _this.displaykey++;
+        _this.displayKey++;
       });
     },
     searchByTags: function searchByTags() {
@@ -1921,6 +1923,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$axios.get(this.searchByTagsUrl + '?tags=' + this.tagsSearchMassiveId + '&search=' + this.searchMessage).then(function (response) {
         _this2.answer = response.data;
+        _this2.displayKey++;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1963,8 +1966,10 @@ __webpack_require__.r(__webpack_exports__);
       return Math.floor((this.filteredList().length + 6) / 6);
     },
     stringToJson: function stringToJson(value) {
-      var obj = JSON.parse(value);
-      this.addSearchTags(obj);
+      if (value != undefined) {
+        var obj = JSON.parse(value);
+        this.addSearchTags(obj);
+      }
     }
   },
   computed: {
@@ -1977,21 +1982,29 @@ __webpack_require__.r(__webpack_exports__);
     // },
     list: function list() {
       var value = this.filteredList();
-
-      if (this.numberOfList() > 1) {
-        if (this.paginationValue == 1) {
-          value.length = 6;
-          return value;
-        } else if (this.paginationValue == this.numberOfList()) {
-          value.splice(0, (this.numberOfList() - 1) * 6);
-          return value;
-        } else if (this.filteredList().length <= 6) {
-          return value;
-        } else {
-          value.splice(0, (this.paginationValue - 1) * 6);
-          value.splice(6, this.filteredList().length - (this.paginationValue - 1) * 6);
-          return value;
+      if (value != null) if (value.length > 6) {
+        if (this.numberOfList() > 1) {
+          if (this.paginationValue == 1) {
+            value.length = 6;
+            this.displayKey++;
+            return value;
+          } else if (this.paginationValue == this.numberOfList()) {
+            value.splice(0, (this.numberOfList() - 1) * 6);
+            this.displayKey++;
+            return value;
+          } else if (this.filteredList().length <= 6) {
+            this.displayKey++;
+            return value;
+          } else {
+            value.splice(0, (this.paginationValue - 1) * 6);
+            value.splice(6, this.filteredList().length - (this.paginationValue - 1) * 6);
+            this.displayKey++;
+            return value;
+          }
         }
+      } else {
+        this.displayKey++;
+        return value;
       }
     }
   }
@@ -3470,202 +3483,201 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "search resultSearch" }, [
-        _c("div", { staticClass: "search-container mb-2" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.searchMessage,
-                expression: "searchMessage"
-              }
-            ],
-            staticClass: "form-control ",
-            attrs: { type: "text", name: "searchMessage" },
-            domProps: {
+  return _c("div", { key: _vm.displayKey }, [
+    _c("div", { staticClass: "search resultSearch" }, [
+      _c("div", { staticClass: "search-container mb-2" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
               value: _vm.searchMessage,
-              textContent: _vm._s(_vm.searchMessage)
-            },
+              expression: "searchMessage"
+            }
+          ],
+          staticClass: "form-control ",
+          attrs: { type: "text", name: "searchMessage" },
+          domProps: {
+            value: _vm.searchMessage,
+            textContent: _vm._s(_vm.searchMessage)
+          },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchMessage = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "button search-icon",
+            attrs: { type: "submit" },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.searchMessage = $event.target.value
+              click: function($event) {
+                return _vm.searchByTags()
               }
             }
+          },
+          [_c("img", { attrs: { src: "resources\\pic\\search.png", alt: "" } })]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _vm.tagsSearchMassiveId != ""
+      ? _c(
+          "div",
+          { staticClass: "search_tag_list" },
+          _vm._l(_vm.tagsSearchMassive, function(tag) {
+            return _c(
+              "div",
+              {
+                staticClass:
+                  " border border-secondary rounded d-inline-block p-1 pl-2 pr-2 mr-2 select_tag",
+                attrs: { id: tag.id }
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "mr-1 text-dark mb-2 close-tag ",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.closeTag(tag)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                ),
+                _vm._v(_vm._s(tag.name) + "\n        ")
+              ]
+            )
           }),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "button search-icon",
-              attrs: { type: "submit" },
-              on: {
-                click: function($event) {
-                  return _vm.searchByTags()
-                }
-              }
-            },
-            [
-              _c("img", {
-                attrs: { src: "resources\\pic\\search.png", alt: "" }
-              })
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _vm.tagsSearchMassiveId != ""
+          0
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "row search_container " }, [
+      _vm.answer != undefined
         ? _c(
             "div",
-            { staticClass: "search_tag_list" },
-            _vm._l(_vm.tagsSearchMassive, function(tag) {
+            { staticClass: "search_result col-9" },
+            _vm._l(_vm.list, function(book) {
               return _c(
                 "div",
-                {
-                  staticClass:
-                    " border border-secondary rounded d-inline-block p-1 pl-2 pr-2 mr-2 select_tag",
-                  attrs: { id: tag.id }
-                },
+                { staticClass: "result", attrs: { id: book.id } },
                 [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "mr-1 text-dark mb-2 close-tag ",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          return _vm.closeTag(tag)
+                  _c("div", { staticClass: "media" }, [
+                    _c("a", { attrs: { href: "book/" + book.id } }, [
+                      _c("img", {
+                        attrs: {
+                          height: "150px",
+                          width: "100px",
+                          src: "data:image/jpeg;base64," + book.base64
                         }
-                      }
-                    },
-                    [_c("i", { staticClass: "fas fa-times" })]
-                  ),
-                  _vm._v(_vm._s(tag.name) + "\n        ")
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "media-body" }, [
+                      _c("a", { attrs: { href: "book/" + book.id } }, [
+                        _c("h3", [_vm._v(_vm._s(book.name))])
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v("By " + _vm._s(book.author))]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
+                    ]),
+                    _vm._v(" "),
+                    book.amount == 0
+                      ? _c("div", { staticClass: "available" }, [
+                          _vm._v(
+                            "\n                        Not available\n                    "
+                          )
+                        ])
+                      : _c("div", { staticClass: "available" }, [
+                          _vm._v(
+                            "\n                        Available\n                    "
+                          )
+                        ])
+                  ])
                 ]
               )
             }),
             0
           )
-        : _vm._e(),
+        : _c("div", { staticClass: "noBook col-9" }),
       _vm._v(" "),
-      _c("div", { staticClass: "row search_container " }, [
-        _vm.answer != undefined
+      _c("div", { staticClass: "col-3 pl-4 pr-4 pt-2 tags_left_side_menu" }, [
+        _c("h3", [_vm._v("Tags:")]),
+        _vm._v(" "),
+        _vm.tags != null
           ? _c(
               "div",
-              { staticClass: "search_result col-9" },
-              _vm._l(_vm.list, function(book) {
+              { staticClass: "search-tags" },
+              _vm._l(_vm.tags, function(tag) {
                 return _c(
                   "div",
-                  { staticClass: "result", attrs: { id: book.id } },
+                  { staticClass: "single-search-tag", attrs: { id: tag.id } },
                   [
-                    _c("div", { staticClass: "media" }, [
-                      _c("a", { attrs: { href: "book/" + book.id } }, [
-                        _c("img", {
-                          attrs: {
-                            height: "150px",
-                            width: "100px",
-                            src: "data:image/jpeg;base64," + book.base64
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "media-body" }, [
-                        _c("a", { attrs: { href: "book/" + book.id } }, [
-                          _c("h3", [_vm._v(_vm._s(book.name))])
-                        ]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v("By " + _vm._s(book.author))]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v(_vm._s(book.edition) + " edition")])
-                      ]),
-                      _vm._v(" "),
-                      book.amount == 0
-                        ? _c("div", { staticClass: "available" }, [
-                            _vm._v(
-                              "\n                        Not available\n                    "
-                            )
-                          ])
-                        : _c("div", { staticClass: "available" }, [
-                            _vm._v(
-                              "\n                        Available\n                    "
-                            )
-                          ])
-                    ])
+                    _vm.checkSelectTag(tag)
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "p-1 tag_icon",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                return _vm.addSearchTags(tag)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-plus" })]
+                        )
+                      : _c(
+                          "a",
+                          {
+                            staticClass: "p-1 tag_icon",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                return _vm.closeTag(tag)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-minus" })]
+                        ),
+                    _vm._v(_vm._s(tag.name) + "\n                ")
                   ]
                 )
               }),
               0
             )
-          : _c("div", { staticClass: "noBook col-9" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3 pl-4 pr-4 pt-2 tags_left_side_menu" }, [
-          _c("h3", [_vm._v("Tags:")]),
-          _vm._v(" "),
-          _vm.tags != null
-            ? _c(
-                "div",
-                { key: _vm.displaykey, staticClass: "search-tags" },
-                _vm._l(_vm.tags, function(tag) {
-                  return _c(
-                    "div",
-                    { staticClass: "single-search-tag", attrs: { id: tag.id } },
-                    [
-                      _vm.checkSelectTag(tag)
-                        ? _c(
-                            "a",
-                            {
-                              staticClass: "p-1 tag_icon",
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.addSearchTags(tag)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-plus" })]
-                          )
-                        : _c(
-                            "a",
-                            {
-                              staticClass: "p-1 tag_icon",
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.closeTag(tag)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-minus" })]
-                          ),
-                      _vm._v(_vm._s(tag.name) + "\n                ")
-                    ]
-                  )
-                }),
-                0
-              )
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _vm.answer.length != 0
-        ? _c("pagination", {
-            key: _vm.displayKey,
-            attrs: {
-              "pagination-value": _vm.paginationValue,
-              "list-number": _vm.numberOfList()
-            },
-            on: { interface: _vm.getDataFromPagination }
-          })
-        : _vm._e()
-    ],
-    1
-  )
+          : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _vm.answer != null
+      ? _c(
+          "div",
+          [
+            _vm.answer.length != 0
+              ? _c("pagination", {
+                  attrs: {
+                    "pagination-value": _vm.paginationValue,
+                    "list-number": _vm.numberOfList()
+                  },
+                  on: { interface: _vm.getDataFromPagination }
+                })
+              : _vm._e()
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
