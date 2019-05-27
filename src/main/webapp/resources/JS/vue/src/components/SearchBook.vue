@@ -52,6 +52,7 @@
                 </div>
             </div>
         </div>
+        <pagination></pagination>
     </div>
 </template>
 

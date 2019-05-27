@@ -118,7 +118,7 @@ h1.popular{
 
 }
 .slick-prev:before, .slick-next:before{
-    color: black !important;
+    color: white  !important;
 }
 
 /*RESULT BLOCK*/
