@@ -101,6 +101,9 @@ body {
 .sidebar .fancyTab .nav-link:active{
   color:#333 !important;
 }
+.sidebar .nav-link.active{
+  color:#333 !important;
+}
 .admin__table__option{
   position: absolute;
   right: 60px;

@@ -37,11 +37,13 @@ public class ProfileController {
     List<Remind> getAllNotifications() {
 
         List<Remind> rm = userBean.checkNotifications(getUserData());
+        if(rm != null)
         for(int i=0;i<rm.size();i++){
             if(rm.get(i).getBook().getAmount()>0){
                 rm.get(i).setAvailabilty(true);
             }
         }
+
         return rm;
     }
 
